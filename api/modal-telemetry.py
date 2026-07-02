@@ -56,9 +56,21 @@ async def _fetch_telemetry() -> dict:
 
     # 4. Profile
     profile = None
-    token_id = os.environ.get("MODAL_TOKEN_ID", "")
-    if token_id:
-        profile = {"name": "vercel-runtime", "active": True, "workspace": token_id[:8] + "..."}
+    workspace_name = "unknown"
+    try:
+        from google.protobuf.empty_pb2 import Empty
+        lookup_resp = await client.stub.WorkspaceNameLookup(Empty())
+        workspace_name = lookup_resp.username
+    except Exception:
+        token_id = os.environ.get("MODAL_TOKEN_ID", "")
+        if token_id:
+            workspace_name = token_id[:8] + "..."
+
+    profile = {
+        "name": "vercel-runtime",
+        "active": True,
+        "workspace": workspace_name
+    }
 
     return {
         "apps": apps,
