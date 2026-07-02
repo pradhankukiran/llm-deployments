@@ -32,6 +32,8 @@ export default function Dashboard() {
   const [isQuerying, setIsQuerying] = useState(false);
   const [activeTab, setActiveTab] = useState<"deployments" | "playground" | "metrics">("deployments");
   const [terminalSearch, setTerminalSearch] = useState("");
+  const [apiKey, setApiKey] = useState("");
+  const [isMockMode, setIsMockMode] = useState(false);
   
   const terminalBodyRef = useRef<HTMLDivElement>(null);
   const logIntervalRef = useRef<any>(null);
@@ -126,8 +128,8 @@ export default function Dashboard() {
     fetchLogs(app.name);
   };
 
-  // High fidelity typing simulation for LLM outputs
-  const handleTestAPI = () => {
+  // Send actual request to Modal API via server-side Next.js route proxy (with mock fallback capability)
+  const handleTestAPI = async () => {
     if (!selectedApp) return;
 
     // Clear any existing typing interval
@@ -138,9 +140,10 @@ export default function Dashboard() {
 
     setIsQuerying(true);
     setResponseStream("");
-    
-    const responses: Record<string, string> = {
-      "qwen36-27b-llama": `HTTP/1.1 200 OK
+
+    if (isMockMode) {
+      const responses: Record<string, string> = {
+        "qwen36-27b-llama": `HTTP/1.1 200 OK
 Content-Type: application/json
 Time-to-first-token: 180ms
 Throughput: 62.1 tokens/sec
@@ -157,7 +160,7 @@ Device: NVIDIA A100 Tensor Core (40GB)
     }
   ]
 }`,
-      "gemma-4-12B-OBLITERATED": `HTTP/1.1 200 OK
+        "gemma-4-12B-OBLITERATED": `HTTP/1.1 200 OK
 Content-Type: application/json
 Time-to-first-token: 245ms
 Throughput: 85.4 tokens/sec
@@ -173,7 +176,7 @@ Throughput: 85.4 tokens/sec
     }
   ]
 }`,
-      "ideogram-4-fp8": `HTTP/1.1 200 OK
+        "ideogram-4-fp8": `HTTP/1.1 200 OK
 Content-Type: application/json
 Generation-Time: 1.84s
 Device: NVIDIA H100 Tensor Core
@@ -192,14 +195,14 @@ Device: NVIDIA H100 Tensor Core
     }
   }
 }`,
-      "vox-populi": `HTTP/1.1 200 OK
+        "vox-populi": `HTTP/1.1 200 OK
 Content-Type: audio/mpeg
 Latency: 110ms
 Audio-Duration: 4.2s
 
 [Raw Byte Output: 184kB Audio Stream]
 Synthesized voice output generated successfully using 'en-US-Emma' voice model.`,
-      "phc-ai-health-companion": `HTTP/1.1 200 OK
+        "phc-ai-health-companion": `HTTP/1.1 200 OK
 Content-Type: application/json
 Response-Time: 180ms
 
@@ -207,9 +210,9 @@ Response-Time: 180ms
   "response": "Understood. Analyzing parameters for health companion agent. Standard clinical filters evaluated: 100% compliant. Safe guidelines matched. Suggesting standard advice for general wellness querying. Please consult a licensed professional for direct diagnostics.",
   "tokens_processed": 98
 }`
-    };
+      };
 
-    const responseText = responses[selectedApp.name] || `HTTP/1.1 200 OK
+      const responseText = responses[selectedApp.name] || `HTTP/1.1 200 OK
 Content-Type: application/json
 Response-Time: 95ms
 
@@ -218,23 +221,97 @@ Response-Time: 95ms
   "result": "Standard endpoint execution completed. Status verified healthy for ${selectedApp.name}."
 }`;
 
-    // Simulate small gateway latency (200ms) before initiating streaming chunk output
-    setTimeout(() => {
-      let charIndex = 0;
-      typingIntervalRef.current = setInterval(() => {
-        if (charIndex < responseText.length) {
-          const chunk = responseText.substring(charIndex, charIndex + 4);
-          setResponseStream((prev) => prev + chunk);
-          charIndex += 4;
-        } else {
-          if (typingIntervalRef.current) {
-            clearInterval(typingIntervalRef.current);
-            typingIntervalRef.current = null;
+      setTimeout(() => {
+        let charIndex = 0;
+        typingIntervalRef.current = setInterval(() => {
+          if (charIndex < responseText.length) {
+            const chunk = responseText.substring(charIndex, charIndex + 4);
+            setResponseStream((prev) => prev + chunk);
+            charIndex += 4;
+          } else {
+            if (typingIntervalRef.current) {
+              clearInterval(typingIntervalRef.current);
+              typingIntervalRef.current = null;
+            }
+            setIsQuerying(false);
           }
-          setIsQuerying(false);
-        }
-      }, 15);
-    }, 200);
+        }, 15);
+      }, 200);
+      return;
+    }
+
+    // Direct Live API Request
+    try {
+      const appNameLower = selectedApp.name.toLowerCase();
+      let url = `https://pradhankukiran--${appNameLower}-api.modal.run/v1/chat/completions`;
+      
+      // Custom mapping paths for specific apps
+      if (selectedApp.name === "vox-populi") {
+        url = `https://pradhankukiran--${appNameLower}-api.modal.run/synthesize`;
+      } else if (selectedApp.name === "ideogram-4-fp8") {
+        url = `https://pradhankukiran--${appNameLower}-api.modal.run/generate`;
+      }
+
+      const headers: Record<string, string> = {};
+      if (apiKey) {
+        headers["Authorization"] = `Bearer ${apiKey}`;
+      }
+
+      // Format payload body
+      let requestBody: any = null;
+      try {
+        requestBody = JSON.parse(prompt);
+      } catch (e) {
+        requestBody = {
+          model: selectedApp.name,
+          messages: [{ role: "user", content: prompt }],
+          stream: true
+        };
+      }
+
+      const response = await fetch("/api/inference", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          url,
+          method: "POST",
+          headers,
+          body: requestBody
+        })
+      });
+
+      if (!response.ok) {
+        const errJson = await response.json().catch(() => ({}));
+        throw new Error(errJson.error || errJson.details || `Error status ${response.status}`);
+      }
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+
+      if (!reader) {
+        throw new Error("No readable stream returned from API");
+      }
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunkText = decoder.decode(value);
+        setResponseStream((prev) => prev + chunkText);
+      }
+
+    } catch (err: any) {
+      console.error("API request failed:", err);
+      setResponseStream(`HTTP/1.1 500 API Connection Failed
+Error-Details: ${err.message}
+
+Ensure your Modal endpoint is running and is not scaled down.
+If your endpoint requires an API key, please enter it in the Authorization Key field.`);
+    } finally {
+      setIsQuerying(false);
+    }
   };
 
   // Helper to color log lines
@@ -517,8 +594,23 @@ Response-Time: 95ms
                 <div className="mb-3 font-monospace bg-light p-2 rounded border border-secondary">
                   <span className="text-secondary text-xs d-block">ENDPOINT URL</span>
                   <span className="orange-highlight-text text-xs word-break">
-                    https://pradhankukiran--{selectedApp?.name.toLowerCase()}-api.modal.run/v1/inference
+                    {selectedApp?.name === "vox-populi"
+                      ? `https://pradhankukiran--vox-populi-api.modal.run/synthesize`
+                      : selectedApp?.name === "ideogram-4-fp8"
+                      ? `https://pradhankukiran--ideogram-4-fp8-api.modal.run/generate`
+                      : `https://pradhankukiran--${selectedApp?.name.toLowerCase()}-api.modal.run/v1/chat/completions`}
                   </span>
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label text-secondary text-xs font-monospace">AUTHORIZATION KEY (BEARER TOKEN)</label>
+                  <input 
+                    type="password" 
+                    placeholder="Enter API key if required..." 
+                    className="form-control bg-white text-dark border-secondary font-monospace"
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                  />
                 </div>
 
                 <div className="mb-3">
@@ -529,6 +621,19 @@ Response-Time: 95ms
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                   ></textarea>
+                </div>
+
+                <div className="mb-3 form-check font-monospace">
+                  <input 
+                    type="checkbox" 
+                    className="form-check-input" 
+                    id="mockModeCheck"
+                    checked={isMockMode}
+                    onChange={(e) => setIsMockMode(e.target.checked)}
+                  />
+                  <label className="form-check-label text-secondary text-sm cursor-pointer" htmlFor="mockModeCheck" style={{ userSelect: "none" }}>
+                    Simulate Locally (Mock Mode)
+                  </label>
                 </div>
 
                 <button 
