@@ -1,11 +1,9 @@
 {
   "functions": {
     "api/modal-telemetry.py": {
-      "runtime": "python3.12",
       "maxDuration": 30
     },
     "api/modal-logs.py": {
-      "runtime": "python3.12",
       "maxDuration": 30
     }
   },
