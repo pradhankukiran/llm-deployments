@@ -25,8 +25,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} data-bs-theme="dark">
-      <body className="bg-black text-white">
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} data-bs-theme="light">
+      <body className="bg-light text-dark">
         <BoostedJS />
         {children}
       </body>
