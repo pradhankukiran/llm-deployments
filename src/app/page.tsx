@@ -35,12 +35,16 @@ export default function Dashboard() {
   
   const terminalBodyRef = useRef<HTMLDivElement>(null);
   const logIntervalRef = useRef<any>(null);
+  const typingIntervalRef = useRef<any>(null);
 
-  // Cleanup interval on unmount
+  // Cleanup intervals on unmount
   useEffect(() => {
     return () => {
       if (logIntervalRef.current) {
         clearInterval(logIntervalRef.current);
+      }
+      if (typingIntervalRef.current) {
+        clearInterval(typingIntervalRef.current);
       }
     };
   }, []);
@@ -125,6 +129,13 @@ export default function Dashboard() {
   // High fidelity typing simulation for LLM outputs
   const handleTestAPI = () => {
     if (!selectedApp) return;
+
+    // Clear any existing typing interval
+    if (typingIntervalRef.current) {
+      clearInterval(typingIntervalRef.current);
+      typingIntervalRef.current = null;
+    }
+
     setIsQuerying(true);
     setResponseStream("");
     
@@ -187,19 +198,26 @@ Response-Time: 95ms
 
 {
   "status": "active",
-  "result": "Standard endpoint execution completed. Status verified healthy."
+  "result": "Standard endpoint execution completed. Status verified healthy for ${selectedApp.name}."
 }`;
 
-    let charIndex = 0;
-    const typingInterval = setInterval(() => {
-      if (charIndex < responseText.length) {
-        setResponseStream((prev) => prev + responseText.charAt(charIndex));
-        charIndex += 4; // speed up typing slightly for long responses
-      } else {
-        clearInterval(typingInterval);
-        setIsQuerying(false);
-      }
-    }, 10);
+    // Simulate small gateway latency (200ms) before initiating streaming chunk output
+    setTimeout(() => {
+      let charIndex = 0;
+      typingIntervalRef.current = setInterval(() => {
+        if (charIndex < responseText.length) {
+          const chunk = responseText.substring(charIndex, charIndex + 4);
+          setResponseStream((prev) => prev + chunk);
+          charIndex += 4;
+        } else {
+          if (typingIntervalRef.current) {
+            clearInterval(typingIntervalRef.current);
+            typingIntervalRef.current = null;
+          }
+          setIsQuerying(false);
+        }
+      }, 15);
+    }, 200);
   };
 
   // Helper to color log lines
