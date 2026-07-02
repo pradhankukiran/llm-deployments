@@ -232,9 +232,19 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
         
         {/* Page Title Block */}
         <div className="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary pb-3">
-          <h1 className="h3 text-dark font-monospace fw-bold mb-0">
-            MODAL <span className="orange-highlight">SERVERLESS DASHBOARD</span>
-          </h1>
+          <div className="d-flex align-items-center gap-3">
+            <h1 className="h3 text-dark font-monospace fw-bold mb-0">
+              MODAL <span className="orange-highlight">SERVERLESS DASHBOARD</span>
+            </h1>
+            <a 
+              href="https://pradhankukiran--grafana-dashboard-start-grafana.modal.run" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="btn btn-sm btn-outline-info font-monospace fw-bold px-2 py-1 text-xs"
+            >
+              LAUNCH GRAFANA ↗
+            </a>
+          </div>
           {profile && (
             <div className="text-end font-monospace text-xs text-secondary">
               WORKSPACE: <span className="text-dark fw-bold">{profile.workspace}</span> | ACTIVE PROFILE: <span className="text-dark fw-bold">{profile.name}</span>
