@@ -34,6 +34,16 @@ export default function Dashboard() {
   const [terminalSearch, setTerminalSearch] = useState("");
   
   const terminalEndRef = useRef<HTMLDivElement>(null);
+  const logIntervalRef = useRef<any>(null);
+
+  // Cleanup interval on unmount
+  useEffect(() => {
+    return () => {
+      if (logIntervalRef.current) {
+        clearInterval(logIntervalRef.current);
+      }
+    };
+  }, []);
 
   // Fetch apps on mount
   useEffect(() => {
@@ -69,20 +79,35 @@ export default function Dashboard() {
   const fetchLogs = async (appName: string) => {
     setLoadingLogs(true);
     setLogs([]);
+
+    // Clear any existing log streaming interval to prevent overlapping intervals
+    if (logIntervalRef.current) {
+      clearInterval(logIntervalRef.current);
+      logIntervalRef.current = null;
+    }
+
     try {
       const res = await fetch(`/api/logs?name=${encodeURIComponent(appName)}`);
       const data = await res.json();
       
-      // Simulate live streaming of the logs line by line
-      let currentLine = 0;
-      const interval = setInterval(() => {
-        if (currentLine < data.logs.length) {
-          setLogs((prev) => [...prev, data.logs[currentLine]]);
-          currentLine++;
-        } else {
-          clearInterval(interval);
-        }
-      }, 100);
+      if (data && Array.isArray(data.logs)) {
+        // Simulate live streaming of the logs line by line
+        let currentLine = 0;
+        logIntervalRef.current = setInterval(() => {
+          if (currentLine < data.logs.length) {
+            const line = data.logs[currentLine];
+            if (typeof line === "string") {
+              setLogs((prev) => [...prev, line]);
+            }
+            currentLine++;
+          } else {
+            if (logIntervalRef.current) {
+              clearInterval(logIntervalRef.current);
+              logIntervalRef.current = null;
+            }
+          }
+        }, 100);
+      }
       
     } catch (err) {
       console.error("Error fetching logs:", err);
@@ -179,18 +204,20 @@ Response-Time: 95ms
 
   // Helper to color log lines
   const getLogClass = (line: string) => {
-    if (line.toLowerCase().includes("[system]")) return "log-line log-system";
-    if (line.toLowerCase().includes("[container]")) return "log-line log-container";
-    if (line.toLowerCase().includes("[sglang]")) return "log-line log-sglang";
-    if (line.toLowerCase().includes("[uvicorn]")) return "log-line log-uvicorn";
-    if (line.toLowerCase().includes("[vllm]")) return "log-line log-vllm";
-    if (line.toLowerCase().includes("[ideogram]")) return "log-line log-ideogram";
+    if (!line || typeof line !== "string") return "log-line";
+    const lowerLine = line.toLowerCase();
+    if (lowerLine.includes("[system]")) return "log-line log-system";
+    if (lowerLine.includes("[container]")) return "log-line log-container";
+    if (lowerLine.includes("[sglang]")) return "log-line log-sglang";
+    if (lowerLine.includes("[uvicorn]")) return "log-line log-uvicorn";
+    if (lowerLine.includes("[vllm]")) return "log-line log-vllm";
+    if (lowerLine.includes("[ideogram]")) return "log-line log-ideogram";
     return "log-line";
   };
 
   // Filter logs if searching
   const filteredLogs = logs.filter(line => 
-    line.toLowerCase().includes(terminalSearch.toLowerCase())
+    line && typeof line === "string" && line.toLowerCase().includes(terminalSearch.toLowerCase())
   );
 
   return (
