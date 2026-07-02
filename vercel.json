@@ -1,4 +1,23 @@
 {
-  "installCommand": "npm install && uv pip install modal --system",
+  "functions": {
+    "api/modal-telemetry.py": {
+      "runtime": "python3.12",
+      "maxDuration": 30
+    },
+    "api/modal-logs.py": {
+      "runtime": "python3.12",
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/modal-telemetry",
+      "destination": "/api/modal-telemetry"
+    },
+    {
+      "source": "/api/modal-logs",
+      "destination": "/api/modal-logs"
+    }
+  ],
   "framework": "nextjs"
 }
