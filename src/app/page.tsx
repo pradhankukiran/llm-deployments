@@ -328,7 +328,7 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
                         </div>
 
                         {app.localConfig?.repoId && (
-                          <div className="mt-2 text-sm font-monospace bg-light p-2 rounded">
+                          <div className="mt-2 text-sm font-monospace bg-light p-2">
                             <span className="text-secondary text-xs d-block">MODEL TARGET</span>
                             <span className="orange-highlight-text text-xs">{app.localConfig.repoId}</span>
                           </div>
@@ -461,7 +461,7 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
                     </select>
                   </div>
 
-                  <div className="mb-3 font-monospace bg-light p-2 rounded border border-secondary">
+                  <div className="mb-3 font-monospace bg-light p-2 border border-secondary">
                     <span className="text-secondary text-xs d-block">ENDPOINT URL</span>
                     <span className="orange-highlight-text text-xs word-break">
                       {selectedApp?.name === "vox-populi"
