@@ -199,7 +199,6 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
           <h1 className="h3 text-dark font-monospace fw-bold mb-0">
             MODAL <span className="orange-highlight">SERVERLESS OPS</span>
           </h1>
-          <span className="badge bg-dark font-monospace text-light py-2 px-3">TELEMETRY PORTAL</span>
         </div>
         
         {/* Telemetry Highlight Cards */}
