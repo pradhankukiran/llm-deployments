@@ -197,7 +197,7 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
         {/* Page Title Block */}
         <div className="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary pb-3">
           <h1 className="h3 text-dark font-monospace fw-bold mb-0">
-            MODAL <span className="orange-highlight">SERVERLESS OPS</span>
+            MODAL <span className="orange-highlight">SERVERLESS DASHBOARD</span>
           </h1>
         </div>
         
