@@ -194,6 +194,14 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
       {/* Main Grid Layout */}
       <main className="container-fluid px-4 py-4">
         
+        {/* Page Title Block */}
+        <div className="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary pb-3">
+          <h1 className="h3 text-dark font-monospace fw-bold mb-0">
+            MODAL <span className="orange-highlight">SERVERLESS OPS</span>
+          </h1>
+          <span className="badge bg-dark font-monospace text-light py-2 px-3">TELEMETRY PORTAL</span>
+        </div>
+        
         {/* Telemetry Highlight Cards */}
         <div className="row g-3 mb-4">
           <div className="col-md-3">
