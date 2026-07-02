@@ -85,10 +85,19 @@ function scanLocalConfigs(): Record<string, LocalAppConfig> {
 
 export async function GET() {
   try {
+    const execOpts = {
+      encoding: "utf-8" as const,
+      env: {
+        ...process.env,
+        MODAL_TOKEN_ID: process.env.MODAL_TOKEN_ID,
+        MODAL_TOKEN_SECRET: process.env.MODAL_TOKEN_SECRET,
+      }
+    };
+
     // 1. Fetch live apps from Modal CLI
     let liveApps: AppListItem[] = [];
     try {
-      const output = execSync("modal app list --json", { encoding: "utf-8" });
+      const output = execSync("modal app list --json", execOpts);
       liveApps = JSON.parse(output);
     } catch (cliError: any) {
       console.error("Failed to run modal app list:", cliError.message);
@@ -105,7 +114,7 @@ export async function GET() {
     // 2. Fetch live containers
     let liveContainers: any[] = [];
     try {
-      const output = execSync("modal container list --json", { encoding: "utf-8" });
+      const output = execSync("modal container list --json", execOpts);
       liveContainers = JSON.parse(output);
     } catch (cliError: any) {
       console.error("Failed to run modal container list:", cliError.message);
@@ -114,7 +123,7 @@ export async function GET() {
     // 3. Fetch live volumes
     let liveVolumes: any[] = [];
     try {
-      const output = execSync("modal volume list --json", { encoding: "utf-8" });
+      const output = execSync("modal volume list --json", execOpts);
       liveVolumes = JSON.parse(output);
     } catch (cliError: any) {
       console.error("Failed to run modal volume list:", cliError.message);
@@ -123,7 +132,7 @@ export async function GET() {
     // 4. Fetch live secrets
     let liveSecrets: any[] = [];
     try {
-      const output = execSync("modal secret list --json", { encoding: "utf-8" });
+      const output = execSync("modal secret list --json", execOpts);
       liveSecrets = JSON.parse(output);
     } catch (cliError: any) {
       console.error("Failed to run modal secret list:", cliError.message);
@@ -132,7 +141,7 @@ export async function GET() {
     // 5. Fetch live profile / workspace
     let activeProfile: any = null;
     try {
-      const output = execSync("modal profile list --json", { encoding: "utf-8" });
+      const output = execSync("modal profile list --json", execOpts);
       const profiles = JSON.parse(output);
       activeProfile = profiles.find((p: any) => p.active) || profiles[0] || null;
     } catch (cliError: any) {

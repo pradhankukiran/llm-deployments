@@ -12,8 +12,17 @@ export async function GET(request: Request) {
   }
 
   try {
+    const execOpts = {
+      encoding: "utf-8" as const,
+      env: {
+        ...process.env,
+        MODAL_TOKEN_ID: process.env.MODAL_TOKEN_ID,
+        MODAL_TOKEN_SECRET: process.env.MODAL_TOKEN_SECRET,
+      }
+    };
+
     // Query Modal apps list to check active tasks count and retrieve app ID
-    const appsListRaw = execSync("modal app list --json", { encoding: "utf-8" });
+    const appsListRaw = execSync("modal app list --json", execOpts);
     const apps = JSON.parse(appsListRaw);
     
     const matchedApp = apps.find(
@@ -45,7 +54,7 @@ export async function GET(request: Request) {
     try {
       // Run for 2.5 seconds to capture active bootup/warmup logs
       const rawLogs = execSync(`timeout 2.5s modal app logs ${appId}`, {
-        encoding: "utf-8",
+        ...execOpts,
         stdio: ["pipe", "pipe", "ignore"] // ignore stderr to prevent hanging/crashing
       });
       
