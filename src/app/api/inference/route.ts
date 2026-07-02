@@ -13,13 +13,37 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    let reqHeaders = { ...headers };
+
+    // If no Authorization header is provided, try to load matching API key from server environment
+    if (!reqHeaders["Authorization"]) {
+      let envKey = "";
+      if (url.includes("gemma-4-12b-obliterated")) {
+        envKey = process.env.GEMMA_API_KEY || "";
+      } else if (url.includes("qwen36-27b-llama")) {
+        envKey = process.env.QWEN_API_KEY || "";
+      } else if (url.includes("ideogram-4-fp8")) {
+        envKey = process.env.IDEOGRAM_FP8_API_KEY || "";
+      } else if (url.includes("vox-populi")) {
+        envKey = process.env.VOX_POPULI_API_KEY || "";
+      } else if (url.includes("phc-ai-health-companion")) {
+        envKey = process.env.PHC_HEALTH_COMPANION_API_KEY || "";
+      }
+
+      if (envKey) {
+        reqHeaders["Authorization"] = `Bearer ${envKey}`;
+      }
+    }
+
     console.log(`[API Proxy] Forwarding request to: ${url}`);
+    console.log(`[API Proxy] Headers:`, JSON.stringify(reqHeaders));
+    console.log(`[API Proxy] Body:`, JSON.stringify(body));
 
     const modalRes = await fetch(url, {
       method: method || "POST",
       headers: {
         "Content-Type": "application/json",
-        ...headers,
+        ...reqHeaders,
       },
       body: body ? JSON.stringify(body) : undefined,
     });
