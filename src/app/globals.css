@@ -1,0 +1,163 @@
+/* Custom scrollbar matching the dark theme and Orange design language */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111111;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #f16e00;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff7900;
+}
+
+/* Custom styles for our serverless dashboard */
+
+.orange-border-left {
+  border-left: 4px solid #f16e00 !important;
+}
+
+/* Status dots */
+.status-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.status-dot-active {
+  background-color: #32c832;
+  box-shadow: 0 0 8px #32c832;
+  animation: pulse-green 2s infinite;
+}
+
+.status-dot-idle {
+  background-color: #ffd200;
+  box-shadow: 0 0 8px #ffd200;
+}
+
+.status-dot-stopped {
+  background-color: #cd3c14;
+}
+
+@keyframes pulse-green {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(50, 200, 50, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(50, 200, 50, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(50, 200, 50, 0);
+  }
+}
+
+/* Terminal Console Component */
+.terminal-window {
+  background-color: #0b0b0b;
+  border: 1px solid #333333;
+  border-radius: 4px;
+  font-family: var(--font-geist-mono), monospace;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.terminal-header {
+  background-color: #1a1a1a;
+  border-bottom: 1px solid #333333;
+  padding: 8px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.terminal-title {
+  color: #a0a0a0;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.terminal-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.terminal-btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.terminal-btn-red { background-color: #ff5f56; }
+.terminal-btn-yellow { background-color: #ffbd2e; }
+.terminal-btn-green { background-color: #27c93f; }
+
+.terminal-body {
+  padding: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #dddddd;
+}
+
+.log-line {
+  margin-bottom: 6px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.log-system {
+  color: #32c832; /* Neo Green */
+}
+
+.log-container {
+  color: #f16e00; /* Orange */
+}
+
+.log-sglang, .log-uvicorn {
+  color: #527edb; /* Cyan/blue */
+}
+
+.log-vllm, .log-ideogram {
+  color: #a855f7; /* Purple */
+}
+
+/* Glassmorphism utility card */
+.glass-card {
+  background: rgba(25, 25, 25, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(241, 110, 0, 0.4);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Custom Orange Typography Details */
+.orange-highlight {
+  color: #f16e00;
+}
+
+/* Hover scales */
+.hover-scale {
+  transition: transform 0.2s ease;
+}
+.hover-scale:hover {
+  transform: scale(1.02);
+}
