@@ -197,54 +197,62 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
         {/* Telemetry Highlight Cards */}
         <div className="row g-3 mb-4">
           <div className="col-md-3">
-            <div className="card glass-card orange-border-left p-3 h-100">
-              <span className="text-secondary text-sm text-uppercase font-monospace">ACTIVE DEPLOYMENTS</span>
-              <h2 className="display-4 fw-bold mt-1 text-dark" style={{ minHeight: "56px" }}>{apps.length || 5}</h2>
-              <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
-                <div className="progress-bar bg-primary" role="progressbar" style={{ width: "100%", backgroundColor: "#f16e00" }}></div>
+            <div className="card glass-card orange-border-left h-100">
+              <div className="card-body p-3">
+                <span className="text-secondary text-sm text-uppercase font-monospace">ACTIVE DEPLOYMENTS</span>
+                <h2 className="display-4 fw-bold mt-1 text-dark" style={{ minHeight: "56px" }}>{apps.length || 5}</h2>
+                <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
+                  <div className="progress-bar bg-primary" role="progressbar" style={{ width: "100%", backgroundColor: "#f16e00" }}></div>
+                </div>
+                <div className="text-muted mt-2 d-block text-sm">100% serverless environments</div>
               </div>
-              <div className="text-muted mt-2 d-block text-sm">100% serverless environments</div>
             </div>
           </div>
 
           <div className="col-md-3">
-            <div className="card glass-card p-3 h-100" style={{ borderLeft: "4px solid #32c832" }}>
-              <span className="text-secondary text-sm text-uppercase font-monospace">RUNNING CONTAINERS</span>
-              <h2 className="display-4 fw-bold mt-1 text-success" style={{ minHeight: "56px" }}>
-                {apps.reduce((acc, app) => acc + app.tasksCount, 0)}
-              </h2>
-              <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
-                <div className="progress-bar bg-success" role="progressbar" style={{ width: "0%" }}></div>
+            <div className="card glass-card h-100" style={{ borderLeft: "4px solid #32c832" }}>
+              <div className="card-body p-3">
+                <span className="text-secondary text-sm text-uppercase font-monospace">RUNNING CONTAINERS</span>
+                <h2 className="display-4 fw-bold mt-1 text-success" style={{ minHeight: "56px" }}>
+                  {apps.reduce((acc, app) => acc + app.tasksCount, 0)}
+                </h2>
+                <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
+                  <div className="progress-bar bg-success" role="progressbar" style={{ width: "0%" }}></div>
+                </div>
+                <div className="text-muted mt-2 d-block text-sm">Auto-scaled to zero when idle</div>
               </div>
-              <div className="text-muted mt-2 d-block text-sm">Auto-scaled to zero when idle</div>
             </div>
           </div>
 
           <div className="col-md-3">
-            <div className="card glass-card p-3 h-100" style={{ borderLeft: "4px solid #ffd200" }}>
-              <span className="text-secondary text-sm text-uppercase font-monospace">PROVISIONED GPUS</span>
-              <h2 className="display-5 fw-bold mt-1 text-dark" style={{ minHeight: "56px", lineHeight: "1.1" }}>H100 / L40S</h2>
-              <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
-                <div className="progress-bar" role="progressbar" style={{ width: "60%", backgroundColor: "#e5b800" }}></div>
+            <div className="card glass-card h-100" style={{ borderLeft: "4px solid #ffd200" }}>
+              <div className="card-body p-3">
+                <span className="text-secondary text-sm text-uppercase font-monospace">PROVISIONED GPUS</span>
+                <h2 className="display-5 fw-bold mt-1 text-dark" style={{ minHeight: "56px", lineHeight: "1.1" }}>H100 / L40S</h2>
+                <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
+                  <div className="progress-bar" role="progressbar" style={{ width: "60%", backgroundColor: "#e5b800" }}></div>
+                </div>
+                <div className="text-muted mt-2 d-block text-sm">Dedicated hardware bindings active</div>
               </div>
-              <div className="text-muted mt-2 d-block text-sm">Dedicated hardware bindings active</div>
             </div>
           </div>
 
           <div className="col-md-3">
-            <div className="card glass-card p-3 h-100" style={{ borderLeft: "4px solid #527edb" }}>
-              <span className="text-secondary text-sm text-uppercase font-monospace">ACTIVE VOLUMES</span>
-              <h2 className="display-4 fw-bold mt-1 text-info" style={{ minHeight: "56px" }}>2</h2>
-              <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
-                <div className="progress-bar bg-info" role="progressbar" style={{ width: "100%" }}></div>
+            <div className="card glass-card h-100" style={{ borderLeft: "4px solid #527edb" }}>
+              <div className="card-body p-3">
+                <span className="text-secondary text-sm text-uppercase font-monospace">ACTIVE VOLUMES</span>
+                <h2 className="display-4 fw-bold mt-1 text-info" style={{ minHeight: "56px" }}>2</h2>
+                <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
+                  <div className="progress-bar bg-info" role="progressbar" style={{ width: "100%" }}></div>
+                </div>
+                <div className="text-muted mt-2 d-block text-sm">High performance caching stores</div>
               </div>
-              <div className="text-muted mt-2 d-block text-sm">High performance caching stores</div>
             </div>
           </div>
         </div>
 
         {/* Navigation Tabs */}
-        <ul className="nav nav-tabs border-dark mb-4" id="dashboardTabs" role="tablist">
+        <ul className="nav nav-underline mb-4" id="dashboardTabs" role="tablist">
           <li className="nav-item" role="presentation">
             <button 
               className={`nav-link font-monospace py-3 px-4 ${activeTab === "deployments" ? "active" : ""}`} 
@@ -292,60 +300,62 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
                     <div 
                       key={app.appId} 
                       onClick={() => handleSelectApp(app)}
-                      className={`card glass-card p-3 cursor-pointer ${selectedApp?.appId === app.appId ? "selected-card" : ""}`}
+                      className={`card glass-card cursor-pointer ${selectedApp?.appId === app.appId ? "selected-card" : ""}`}
                     >
-                      <div className="d-flex justify-content-between align-items-start">
-                        <div>
-                          <div className="d-flex align-items-center gap-2">
-                            <span className={`status-dot ${app.tasksCount > 0 ? "status-dot-active" : "status-dot-idle"}`}></span>
-                            <h4 className="h5 mb-0 text-dark font-monospace fw-bold">{app.name}</h4>
+                      <div className="card-body p-3">
+                        <div className="d-flex justify-content-between align-items-start">
+                          <div>
+                            <div className="d-flex align-items-center gap-2">
+                              <span className={`status-dot ${app.tasksCount > 0 ? "status-dot-active" : "status-dot-idle"}`}></span>
+                              <h4 className="h5 mb-0 text-dark font-monospace fw-bold">{app.name}</h4>
+                            </div>
+                            <span className="text-secondary font-monospace text-xs d-block mt-1">ID: {app.appId}</span>
                           </div>
-                          <span className="text-secondary font-monospace text-xs d-block mt-1">ID: {app.appId}</span>
+                          <span className="badge bg-light border border-secondary font-monospace text-secondary">
+                            {app.state}
+                          </span>
                         </div>
-                        <span className="badge bg-light border border-secondary font-monospace text-secondary">
-                          {app.state}
-                        </span>
-                      </div>
 
-                      <div className="row mt-3 g-2 text-sm font-monospace">
-                        <div className="col-6">
-                          <span className="text-secondary text-xs d-block">PROVISIONED HARDWARE</span>
-                          <span className="text-dark">{app.localConfig?.gpu || "None (CPU)"}</span>
+                        <div className="row mt-3 g-2 text-sm font-monospace">
+                          <div className="col-6">
+                            <span className="text-secondary text-xs d-block">PROVISIONED HARDWARE</span>
+                            <span className="text-dark">{app.localConfig?.gpu || "None (CPU)"}</span>
+                          </div>
+                          <div className="col-6">
+                            <span className="text-secondary text-xs d-block">LIFECYCLE TIMEOUT</span>
+                            <span className="text-dark">{app.localConfig?.timeout || "5 mins"}</span>
+                          </div>
                         </div>
-                        <div className="col-6">
-                          <span className="text-secondary text-xs d-block">LIFECYCLE TIMEOUT</span>
-                          <span className="text-dark">{app.localConfig?.timeout || "5 mins"}</span>
-                        </div>
-                      </div>
 
-                      {app.localConfig?.repoId && (
-                        <div className="mt-2 text-sm font-monospace bg-light p-2 rounded">
-                          <span className="text-secondary text-xs d-block">MODEL TARGET</span>
-                          <span className="orange-highlight-text text-xs">{app.localConfig.repoId}</span>
-                        </div>
-                      )}
+                        {app.localConfig?.repoId && (
+                          <div className="mt-2 text-sm font-monospace bg-light p-2 rounded">
+                            <span className="text-secondary text-xs d-block">MODEL TARGET</span>
+                            <span className="orange-highlight-text text-xs">{app.localConfig.repoId}</span>
+                          </div>
+                        )}
 
-                      <div className="d-flex gap-2 mt-3 pt-2 border-top border-light">
-                        <button 
-                          className="btn btn-sm btn-outline-dark font-monospace py-1 px-3"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSelectApp(app);
-                          }}
-                        >
-                          Telemetry Logs
-                        </button>
-                        <button 
-                          className="btn btn-sm btn-primary font-monospace py-1 px-3"
-                          style={{ backgroundColor: "#f16e00", borderColor: "#f16e00" }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedApp(app);
-                            setActiveTab("playground");
-                          }}
-                        >
-                          Playground
-                        </button>
+                        <div className="d-flex gap-2 mt-3 pt-2 border-top border-light">
+                          <button 
+                            className="btn btn-sm btn-outline-secondary font-monospace py-1 px-3"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSelectApp(app);
+                            }}
+                          >
+                            Telemetry Logs
+                          </button>
+                          <button 
+                            className="btn btn-sm btn-primary font-monospace py-1 px-3"
+                            style={{ backgroundColor: "#f16e00", borderColor: "#f16e00" }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedApp(app);
+                              setActiveTab("playground");
+                            }}
+                          >
+                            Playground
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -403,19 +413,21 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
 
               {/* Local codebase link detail */}
               {selectedApp?.localConfig && (
-                <div className="card bg-light border-secondary p-3 mt-4">
-                  <h5 className="h6 text-dark font-monospace orange-highlight mb-2">Codebase Configuration</h5>
-                  <div className="text-sm font-monospace text-secondary">
-                    <div className="mb-1">
-                      File Path: <span className="text-dark">/home/kiran/Projects/{selectedApp.name}/modal_app.py</span>
-                    </div>
-                    {selectedApp.localConfig.volumeName && (
+                <div className="card bg-light border-secondary mt-4">
+                  <div className="card-body p-3">
+                    <h5 className="h6 text-dark font-monospace orange-highlight mb-2">Codebase Configuration</h5>
+                    <div className="text-sm font-monospace text-secondary">
                       <div className="mb-1">
-                        Modal Volume: <span className="text-dark">{selectedApp.localConfig.volumeName}</span>
+                        File Path: <span className="text-dark">/home/kiran/Projects/{selectedApp.name}/modal_app.py</span>
                       </div>
-                    )}
-                    <div>
-                      Target Host: <span className="text-dark">https://pradhankukiran--{selectedApp.name.toLowerCase()}-api.modal.run</span>
+                      {selectedApp.localConfig.volumeName && (
+                        <div className="mb-1">
+                          Modal Volume: <span className="text-dark">{selectedApp.localConfig.volumeName}</span>
+                        </div>
+                      )}
+                      <div>
+                        Target Host: <span className="text-dark">https://pradhankukiran--{selectedApp.name.toLowerCase()}-api.modal.run</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -431,63 +443,65 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
             <div className="col-lg-5">
               <h3 className="h5 text-dark mb-3 font-monospace">API SANDBOX CONSOLE</h3>
               
-              <div className="card glass-card p-4">
-                <div className="mb-3">
-                  <label className="form-label text-secondary text-xs font-monospace d-block">SELECT ENDPOINT</label>
-                  <select 
-                    className="form-select bg-white text-dark border-secondary font-monospace"
-                    value={selectedApp?.appId || ""}
-                    onChange={(e) => {
-                      const matched = apps.find(a => a.appId === e.target.value);
-                      if (matched) setSelectedApp(matched);
-                    }}
+              <div className="card glass-card">
+                <div className="card-body p-4">
+                  <div className="mb-3">
+                    <label className="form-label text-secondary text-xs font-monospace d-block">SELECT ENDPOINT</label>
+                    <select 
+                      className="form-select bg-white text-dark border-secondary font-monospace"
+                      value={selectedApp?.appId || ""}
+                      onChange={(e) => {
+                        const matched = apps.find(a => a.appId === e.target.value);
+                        if (matched) setSelectedApp(matched);
+                      }}
+                    >
+                      {apps.map(a => (
+                        <option key={a.appId} value={a.appId}>{a.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="mb-3 font-monospace bg-light p-2 rounded border border-secondary">
+                    <span className="text-secondary text-xs d-block">ENDPOINT URL</span>
+                    <span className="orange-highlight-text text-xs word-break">
+                      {selectedApp?.name === "vox-populi"
+                        ? `https://pradhankukiran--vox-populi-api.modal.run/synthesize`
+                        : selectedApp?.name === "ideogram-4-fp8"
+                        ? `https://pradhankukiran--ideogram-4-fp8-api.modal.run/generate`
+                        : `https://pradhankukiran--${selectedApp?.name.toLowerCase()}-api.modal.run/v1/chat/completions`}
+                    </span>
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label text-secondary text-xs font-monospace">AUTHORIZATION KEY (BEARER TOKEN)</label>
+                    <input 
+                      type="password" 
+                      placeholder="Enter API key if required..." 
+                      className="form-control bg-white text-dark border-secondary font-monospace"
+                      value={apiKey}
+                      onChange={(e) => setApiKey(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label text-secondary text-xs font-monospace">PROMPT / REQUEST BODY</label>
+                    <textarea 
+                      className="form-control bg-white text-dark border-secondary font-monospace" 
+                      rows={4}
+                      value={prompt}
+                      onChange={(e) => setPrompt(e.target.value)}
+                    ></textarea>
+                  </div>
+
+                  <button 
+                    className="btn btn-primary w-100 font-monospace py-2"
+                    style={{ backgroundColor: "#f16e00", borderColor: "#f16e00" }}
+                    onClick={handleTestAPI}
+                    disabled={isQuerying || !selectedApp}
                   >
-                    {apps.map(a => (
-                      <option key={a.appId} value={a.appId}>{a.name}</option>
-                    ))}
-                  </select>
+                    {isQuerying ? "TRANSMITTING PAYLOAD..." : "SEND TEST REQUEST"}
+                  </button>
                 </div>
-
-                <div className="mb-3 font-monospace bg-light p-2 rounded border border-secondary">
-                  <span className="text-secondary text-xs d-block">ENDPOINT URL</span>
-                  <span className="orange-highlight-text text-xs word-break">
-                    {selectedApp?.name === "vox-populi"
-                      ? `https://pradhankukiran--vox-populi-api.modal.run/synthesize`
-                      : selectedApp?.name === "ideogram-4-fp8"
-                      ? `https://pradhankukiran--ideogram-4-fp8-api.modal.run/generate`
-                      : `https://pradhankukiran--${selectedApp?.name.toLowerCase()}-api.modal.run/v1/chat/completions`}
-                  </span>
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label text-secondary text-xs font-monospace">AUTHORIZATION KEY (BEARER TOKEN)</label>
-                  <input 
-                    type="password" 
-                    placeholder="Enter API key if required..." 
-                    className="form-control bg-white text-dark border-secondary font-monospace"
-                    value={apiKey}
-                    onChange={(e) => setApiKey(e.target.value)}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label text-secondary text-xs font-monospace">PROMPT / REQUEST BODY</label>
-                  <textarea 
-                    className="form-control bg-white text-dark border-secondary font-monospace" 
-                    rows={4}
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                  ></textarea>
-                </div>
-
-                <button 
-                  className="btn btn-primary w-100 font-monospace py-2"
-                  style={{ backgroundColor: "#f16e00", borderColor: "#f16e00" }}
-                  onClick={handleTestAPI}
-                  disabled={isQuerying || !selectedApp}
-                >
-                  {isQuerying ? "TRANSMITTING PAYLOAD..." : "SEND TEST REQUEST"}
-                </button>
               </div>
             </div>
 
@@ -529,66 +543,70 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
          {activeTab === "metrics" && (
            <div className="row g-4">
              <div className="col-md-6">
-               <div className="card glass-card p-4">
-                 <h4 className="h5 text-dark font-monospace orange-highlight mb-3">GPU Compute Inventory</h4>
-                 <div className="table-responsive">
-                   <table className="table table-striped table-hover border-secondary font-monospace text-sm">
-                     <thead>
-                       <tr className="text-secondary border-bottom border-secondary">
-                         <th>GPU Type</th>
-                         <th>VRAM</th>
-                         <th>Active Nodes</th>
-                         <th>Target Models</th>
-                       </tr>
-                     </thead>
-                     <tbody>
-                       <tr className="border-bottom border-light">
-                         <td className="text-dark">NVIDIA H100</td>
-                         <td className="text-dark">80GB HBM3</td>
-                         <td className="text-dark">0 / 1</td>
-                         <td className="text-dark">`ideogram-4-fp8`</td>
-                       </tr>
-                       <tr className="border-bottom border-light">
-                         <td className="text-dark">NVIDIA L40S</td>
-                         <td className="text-dark">48GB GDDR6</td>
-                         <td className="text-dark">0 / 1</td>
-                         <td className="text-dark">`gemma-4-12B-OBLITERATED`</td>
-                       </tr>
-                       <tr className="border-bottom border-light">
-                         <td className="text-dark">NVIDIA A100</td>
-                         <td className="text-dark">40GB HBM2</td>
-                         <td className="text-dark">0 / 1</td>
-                         <td className="text-dark">`qwen36-27b-llama`</td>
-                       </tr>
-                       <tr className="border-bottom border-light">
-                         <td className="text-dark">Shared CPU</td>
-                         <td className="text-dark">Dynamic</td>
-                         <td className="text-dark">0 / 2</td>
-                         <td className="text-dark">`vox-populi`, `phc-companion`</td>
-                       </tr>
-                     </tbody>
-                   </table>
+               <div className="card glass-card">
+                 <div className="card-body p-4">
+                   <h4 className="h5 text-dark font-monospace orange-highlight mb-3">GPU Compute Inventory</h4>
+                   <div className="table-responsive">
+                     <table className="table table-sm table-hover border-secondary font-monospace text-sm">
+                       <thead>
+                         <tr className="text-secondary border-bottom border-secondary">
+                           <th>GPU Type</th>
+                           <th>VRAM</th>
+                           <th>Active Nodes</th>
+                           <th>Target Models</th>
+                         </tr>
+                       </thead>
+                       <tbody>
+                         <tr className="border-bottom border-light">
+                           <td className="text-dark">NVIDIA H100</td>
+                           <td className="text-dark">80GB HBM3</td>
+                           <td className="text-dark">0 / 1</td>
+                           <td className="text-dark">`ideogram-4-fp8`</td>
+                         </tr>
+                         <tr className="border-bottom border-light">
+                           <td className="text-dark">NVIDIA L40S</td>
+                           <td className="text-dark">48GB GDDR6</td>
+                           <td className="text-dark">0 / 1</td>
+                           <td className="text-dark">`gemma-4-12B-OBLITERATED`</td>
+                         </tr>
+                         <tr className="border-bottom border-light">
+                           <td className="text-dark">NVIDIA A100</td>
+                           <td className="text-dark">40GB HBM2</td>
+                           <td className="text-dark">0 / 1</td>
+                           <td className="text-dark">`qwen36-27b-llama`</td>
+                         </tr>
+                         <tr className="border-bottom border-light">
+                           <td className="text-dark">Shared CPU</td>
+                           <td className="text-dark">Dynamic</td>
+                           <td className="text-dark">0 / 2</td>
+                           <td className="text-dark">`vox-populi`, `phc-companion`</td>
+                         </tr>
+                       </tbody>
+                     </table>
+                   </div>
                  </div>
                </div>
              </div>
  
              <div className="col-md-6">
-               <div className="card glass-card p-4">
-                 <h4 className="h5 text-dark font-monospace orange-highlight mb-3">Serverless Auto-scaling Settings</h4>
-                 <p className="text-secondary text-sm">
-                   Each model handles cold starts dynamically. The current configurations extracted from your codebase settings:
-                 </p>
-                 <ul className="list-group font-monospace text-sm">
-                   <li className="list-group-item bg-transparent text-dark border-secondary">
-                     <strong className="orange-highlight-text">gemma-4-12B:</strong> Min containers = 0, Max = 1, Idle Scale-down = 10 minutes
-                   </li>
-                   <li className="list-group-item bg-transparent text-dark border-secondary">
-                     <strong className="orange-highlight-text">ideogram-4-fp8:</strong> Min containers = 0, Max = 1, Idle Scale-down = 5 minutes
-                   </li>
-                   <li className="list-group-item bg-transparent text-dark border-secondary">
-                     <strong className="orange-highlight-text">vLLM Inference:</strong> Auto-scales to 0 inside 2 minutes of idle time.
-                   </li>
-                 </ul>
+               <div className="card glass-card">
+                 <div className="card-body p-4">
+                   <h4 className="h5 text-dark font-monospace orange-highlight mb-3">Serverless Auto-scaling Settings</h4>
+                   <p className="text-secondary text-sm">
+                     Each model handles cold starts dynamically. The current configurations extracted from your codebase settings:
+                   </p>
+                   <ul className="list-group font-monospace text-sm">
+                     <li className="list-group-item bg-transparent text-dark border-secondary">
+                       <strong className="orange-highlight-text">gemma-4-12B:</strong> Min containers = 0, Max = 1, Idle Scale-down = 10 minutes
+                     </li>
+                     <li className="list-group-item bg-transparent text-dark border-secondary">
+                       <strong className="orange-highlight-text">ideogram-4-fp8:</strong> Min containers = 0, Max = 1, Idle Scale-down = 5 minutes
+                     </li>
+                     <li className="list-group-item bg-transparent text-dark border-secondary">
+                       <strong className="orange-highlight-text">vLLM Inference:</strong> Auto-scales to 0 inside 2 minutes of idle time.
+                     </li>
+                   </ul>
+                 </div>
                </div>
              </div>
            </div>
