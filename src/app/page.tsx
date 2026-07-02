@@ -254,9 +254,9 @@ Response-Time: 95ms
           <div className="col-md-3">
             <div className="card glass-card p-3 h-100" style={{ borderLeft: "4px solid #ffd200" }}>
               <span className="text-secondary text-xs text-uppercase font-monospace">PROVISIONED GPUS</span>
-              <h2 className="display-6 fw-bold mt-1 text-warning">H100 / L40S</h2>
+              <h2 className="display-6 fw-bold mt-1 text-dark">H100 / L40S</h2>
               <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
-                <div className="progress-bar bg-warning" role="progressbar" style={{ width: "60%" }}></div>
+                <div className="progress-bar" role="progressbar" style={{ width: "60%", backgroundColor: "#e5b800" }}></div>
               </div>
               <small className="text-muted mt-2 d-block">Dedicated hardware bindings active</small>
             </div>
@@ -278,27 +278,24 @@ Response-Time: 95ms
         <ul className="nav nav-tabs border-dark mb-4" id="dashboardTabs" role="tablist">
           <li className="nav-item" role="presentation">
             <button 
-              className={`nav-link font-monospace py-3 px-4 ${activeTab === "deployments" ? "active text-dark border-secondary border-bottom-0 bg-white" : "text-secondary border-0"}`} 
+              className={`nav-link font-monospace py-3 px-4 ${activeTab === "deployments" ? "active" : ""}`} 
               onClick={() => setActiveTab("deployments")}
-              style={activeTab === "deployments" ? { borderTop: "3px solid #f16e00" } : {}}
             >
               DEPLOYMENT MATRIX
             </button>
           </li>
           <li className="nav-item" role="presentation">
             <button 
-              className={`nav-link font-monospace py-3 px-4 ${activeTab === "playground" ? "active text-dark border-secondary border-bottom-0 bg-white" : "text-secondary border-0"}`} 
+              className={`nav-link font-monospace py-3 px-4 ${activeTab === "playground" ? "active" : ""}`} 
               onClick={() => setActiveTab("playground")}
-              style={activeTab === "playground" ? { borderTop: "3px solid #f16e00" } : {}}
             >
               API PLAYGROUND
             </button>
           </li>
           <li className="nav-item" role="presentation">
             <button 
-              className={`nav-link font-monospace py-3 px-4 ${activeTab === "metrics" ? "active text-dark border-secondary border-bottom-0 bg-white" : "text-secondary border-0"}`} 
+              className={`nav-link font-monospace py-3 px-4 ${activeTab === "metrics" ? "active" : ""}`} 
               onClick={() => setActiveTab("metrics")}
-              style={activeTab === "metrics" ? { borderTop: "3px solid #f16e00" } : {}}
             >
               INFRASTRUCTURE METRICS
             </button>
@@ -359,7 +356,7 @@ Response-Time: 95ms
                       {app.localConfig?.repoId && (
                         <div className="mt-2 text-sm font-monospace bg-light p-2 rounded">
                           <span className="text-secondary text-xs d-block">MODEL TARGET</span>
-                          <span className="text-warning text-xs">{app.localConfig.repoId}</span>
+                          <span className="orange-highlight-text text-xs">{app.localConfig.repoId}</span>
                         </div>
                       )}
 
@@ -489,7 +486,7 @@ Response-Time: 95ms
 
                 <div className="mb-3 font-monospace bg-light p-2 rounded border border-secondary">
                   <span className="text-secondary text-xs d-block">ENDPOINT URL</span>
-                  <span className="text-warning text-xs word-break">
+                  <span className="orange-highlight-text text-xs word-break">
                     https://pradhankukiran--{selectedApp?.name.toLowerCase()}-api.modal.run/v1/inference
                   </span>
                 </div>
@@ -604,13 +601,13 @@ Response-Time: 95ms
                  </p>
                  <ul className="list-group font-monospace text-sm">
                    <li className="list-group-item bg-transparent text-dark border-secondary">
-                     <strong className="text-warning">gemma-4-12B:</strong> Min containers = 0, Max = 1, Idle Scale-down = 10 minutes
+                     <strong className="orange-highlight-text">gemma-4-12B:</strong> Min containers = 0, Max = 1, Idle Scale-down = 10 minutes
                    </li>
                    <li className="list-group-item bg-transparent text-dark border-secondary">
-                     <strong className="text-warning">ideogram-4-fp8:</strong> Min containers = 0, Max = 1, Idle Scale-down = 5 minutes
+                     <strong className="orange-highlight-text">ideogram-4-fp8:</strong> Min containers = 0, Max = 1, Idle Scale-down = 5 minutes
                    </li>
                    <li className="list-group-item bg-transparent text-dark border-secondary">
-                     <strong className="text-warning">vLLM Inference:</strong> Auto-scales to 0 inside 2 minutes of idle time.
+                     <strong className="orange-highlight-text">vLLM Inference:</strong> Auto-scales to 0 inside 2 minutes of idle time.
                    </li>
                  </ul>
                </div>

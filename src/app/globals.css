@@ -44,28 +44,32 @@ body {
   border-left: 4px solid #f16e00 !important;
 }
 
-/* Status dots */
+/* Status dots with border for proper contrast in light mode */
 .status-dot {
   display: inline-block;
   width: 10px;
   height: 10px;
   border-radius: 50%;
   margin-right: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .status-dot-active {
-  background-color: #32c832;
-  box-shadow: 0 0 8px #32c832;
+  background-color: #25a025; /* High contrast green */
+  box-shadow: 0 0 6px #25a025;
   animation: pulse-green 2s infinite;
+  border-color: #1a701a;
 }
 
 .status-dot-idle {
-  background-color: #ffd200;
-  box-shadow: 0 0 8px #ffd200;
+  background-color: #e5b800; /* Darker amber-yellow for readable contrast */
+  box-shadow: 0 0 6px rgba(229, 184, 0, 0.4);
+  border-color: #b28f00;
 }
 
 .status-dot-stopped {
   background-color: #cd3c14;
+  border-color: #9d290c;
 }
 
 @keyframes pulse-green {
@@ -181,4 +185,30 @@ body {
 }
 .hover-scale:hover {
   transform: scale(1.02);
+}
+
+/* Custom Tabs Styling for high contrast and brand consistency */
+.nav-tabs .nav-link.active {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-color: #cccccc #cccccc #ffffff !important;
+  border-top: 3px solid #f16e00 !important;
+  font-weight: 700 !important;
+}
+
+.nav-tabs .nav-link {
+  color: #444444 !important;
+  border: 1px solid transparent !important;
+  transition: all 0.2s ease;
+}
+
+.nav-tabs .nav-link:hover {
+  color: #f16e00 !important;
+  border-color: #dddddd #dddddd transparent !important;
+}
+
+/* Accessible warning / alert helper */
+.orange-highlight-text {
+  color: #cc5200 !important; /* High contrast orange for readability on light backgrounds */
+  font-weight: 600;
 }
