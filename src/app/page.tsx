@@ -129,7 +129,7 @@ export default function Dashboard() {
       if (selectedApp.name === "vox-populi") {
         url = `https://pradhankukiran--${appNameLower}-api.modal.run/synthesize`;
       } else if (selectedApp.name === "ideogram-4-fp8") {
-        url = `https://pradhankukiran--${appNameLower}-api.modal.run/generate`;
+        url = `https://pradhankukiran--${appNameLower}-api.modal.run/v1/images/generations`;
       }
 
       const headers: Record<string, string> = {};
@@ -142,11 +142,21 @@ export default function Dashboard() {
       try {
         requestBody = JSON.parse(prompt);
       } catch (e) {
-        requestBody = {
-          model: selectedApp.name,
-          messages: [{ role: "user", content: prompt }],
-          stream: true
-        };
+        if (selectedApp.name === "ideogram-4-fp8") {
+          requestBody = {
+            prompt: prompt
+          };
+        } else if (selectedApp.name === "vox-populi") {
+          requestBody = {
+            text: prompt
+          };
+        } else {
+          requestBody = {
+            model: selectedApp.name,
+            messages: [{ role: "user", content: prompt }],
+            stream: true
+          };
+        }
       }
 
       const response = await fetch("/api/inference", {
@@ -506,7 +516,7 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
                       {selectedApp?.name === "vox-populi"
                         ? `https://pradhankukiran--vox-populi-api.modal.run/synthesize`
                         : selectedApp?.name === "ideogram-4-fp8"
-                        ? `https://pradhankukiran--ideogram-4-fp8-api.modal.run/generate`
+                        ? `https://pradhankukiran--ideogram-4-fp8-api.modal.run/v1/images/generations`
                         : `https://pradhankukiran--${selectedApp?.name.toLowerCase()}-api.modal.run/v1/chat/completions`}
                     </span>
                   </div>
