@@ -222,39 +222,6 @@ Response-Time: 95ms
 
   return (
     <div>
-      {/* Orange Telecom Styled Header */}
-      <header className="bg-black border-bottom border-dark py-3">
-        <div className="container-fluid px-4">
-          <div className="row align-items-center">
-            <div className="col-md-6 d-flex align-items-center gap-3">
-              {/* Orange brand square logo */}
-              <div 
-                style={{ width: "45px", height: "45px", backgroundColor: "#f16e00" }} 
-                className="d-flex align-items-center justify-content-center shadow-sm"
-              >
-                <span className="fw-black text-black h3 mb-0" style={{ fontWeight: 900 }}>O</span>
-              </div>
-              <div>
-                <h1 className="h4 text-white mb-0 font-monospace tracking-wide">
-                  ORANGE <span className="orange-highlight">SERVERLESS OPS</span>
-                </h1>
-                <small className="text-secondary">Modal LLM & Inference Deployment Manager</small>
-              </div>
-            </div>
-            
-            <div className="col-md-6 text-md-end mt-3 mt-md-0">
-              <span className="badge border border-success text-success px-3 py-2 me-2">
-                <span className="status-dot status-dot-active me-1"></span>
-                CONTROL PLANE ONLINE
-              </span>
-              <span className="text-secondary text-sm font-monospace">
-                Profile: <span className="text-white">pradhankukiran</span>
-              </span>
-            </div>
-          </div>
-        </div>
-      </header>
-
       {/* Main Grid Layout */}
       <main className="container-fluid px-4 py-4">
         
@@ -653,17 +620,6 @@ Response-Time: 95ms
 
       </main>
 
-      {/* Footer */}
-      <footer className="bg-black border-top border-dark py-4 mt-5">
-        <div className="container-fluid px-4 text-center">
-          <p className="text-secondary mb-0 font-monospace text-xs">
-            Powered by <a href="https://modal.com" className="text-white hover-underline">Modal Serverless Platform</a> &amp; <a href="https://github.com/Orange-OpenSource/Orange-Boosted-Bootstrap" className="text-white hover-underline">Orange Boosted Bootstrap</a>.
-          </p>
-          <small className="text-muted font-monospace" style={{ fontSize: "0.7rem" }}>
-            Telemetry Client ID: ap-C1NcOP2W6vSn89idZvavdV | Region: us-east | Cluster: gcp-us-east4
-          </small>
-        </div>
-      </footer>
     </div>
   );
 }
