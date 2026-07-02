@@ -37,7 +37,6 @@ export default function Dashboard() {
   // Real-time live control plane stats
   const [containers, setContainers] = useState<any[]>([]);
   const [volumes, setVolumes] = useState<any[]>([]);
-  const [secrets, setSecrets] = useState<any[]>([]);
   const [profile, setProfile] = useState<any>(null);
   
   const terminalBodyRef = useRef<HTMLDivElement>(null);
@@ -67,7 +66,6 @@ export default function Dashboard() {
         setApps(data.apps || []);
         setContainers(data.containers || []);
         setVolumes(data.volumes || []);
-        setSecrets(data.secrets || []);
         setProfile(data.profile || null);
         
         const appList = data.apps || [];
@@ -674,9 +672,9 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
                 </div>
               </div>
   
-              {/* Right Column: Storage Volumes & Secrets */}
+              {/* Right Column: Storage Volumes */}
               <div className="col-md-6">
-                <div className="card glass-card mb-4">
+                <div className="card glass-card">
                   <div className="card-body p-4">
                     <h4 className="h5 text-dark font-monospace orange-highlight mb-3">Modal Volumes ({volumes.length})</h4>
                     {volumes.length === 0 ? (
@@ -684,7 +682,7 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
                         No storage volumes configured.
                       </div>
                     ) : (
-                      <div className="table-responsive" style={{ maxHeight: "250px", overflowY: "auto" }}>
+                      <div className="table-responsive" style={{ maxHeight: "400px", overflowY: "auto" }}>
                         <table className="table table-sm table-hover border-secondary font-monospace text-sm mb-0">
                           <thead>
                             <tr className="text-secondary border-bottom border-secondary">
@@ -697,36 +695,6 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
                               <tr key={i} className="border-bottom border-light">
                                 <td className="text-dark fw-bold">{v.Name}</td>
                                 <td className="text-secondary text-xs">{v["Created at"]}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="card glass-card">
-                  <div className="card-body p-4">
-                    <h4 className="h5 text-dark font-monospace orange-highlight mb-3">Workspace Secrets ({secrets.length})</h4>
-                    {secrets.length === 0 ? (
-                      <div className="text-secondary text-sm font-monospace py-4 text-center">
-                        No authentication secrets configured.
-                      </div>
-                    ) : (
-                      <div className="table-responsive" style={{ maxHeight: "250px", overflowY: "auto" }}>
-                        <table className="table table-sm table-hover border-secondary font-monospace text-sm mb-0">
-                          <thead>
-                            <tr className="text-secondary border-bottom border-secondary">
-                              <th>Secret Name</th>
-                              <th>Last Used At</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {secrets.map((s, i) => (
-                              <tr key={i} className="border-bottom border-light">
-                                <td className="text-dark font-monospace">{s.Name}</td>
-                                <td className="text-secondary text-xs">{s["Last used at"] || s["Created at"] || "Never"}</td>
                               </tr>
                             ))}
                           </tbody>
