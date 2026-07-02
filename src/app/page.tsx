@@ -229,47 +229,47 @@ Response-Time: 95ms
         <div className="row g-3 mb-4">
           <div className="col-md-3">
             <div className="card glass-card orange-border-left p-3 h-100">
-              <span className="text-secondary text-xs text-uppercase font-monospace">ACTIVE DEPLOYMENTS</span>
-              <h2 className="display-6 fw-bold mt-1 text-dark">{apps.length || 5}</h2>
+              <span className="text-secondary text-sm text-uppercase font-monospace">ACTIVE DEPLOYMENTS</span>
+              <h2 className="display-4 fw-bold mt-1 text-dark">{apps.length || 5}</h2>
               <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
                 <div className="progress-bar bg-primary" role="progressbar" style={{ width: "100%", backgroundColor: "#f16e00" }}></div>
               </div>
-              <small className="text-muted mt-2 d-block">100% serverless environments</small>
+              <div className="text-muted mt-2 d-block text-sm">100% serverless environments</div>
             </div>
           </div>
 
           <div className="col-md-3">
             <div className="card glass-card p-3 h-100" style={{ borderLeft: "4px solid #32c832" }}>
-              <span className="text-secondary text-xs text-uppercase font-monospace">RUNNING CONTAINERS</span>
-              <h2 className="display-6 fw-bold mt-1 text-success">
+              <span className="text-secondary text-sm text-uppercase font-monospace">RUNNING CONTAINERS</span>
+              <h2 className="display-4 fw-bold mt-1 text-success">
                 {apps.reduce((acc, app) => acc + app.tasksCount, 0)}
               </h2>
               <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
                 <div className="progress-bar bg-success" role="progressbar" style={{ width: "0%" }}></div>
               </div>
-              <small className="text-muted mt-2 d-block">Auto-scaled to zero when idle</small>
+              <div className="text-muted mt-2 d-block text-sm">Auto-scaled to zero when idle</div>
             </div>
           </div>
 
           <div className="col-md-3">
             <div className="card glass-card p-3 h-100" style={{ borderLeft: "4px solid #ffd200" }}>
-              <span className="text-secondary text-xs text-uppercase font-monospace">PROVISIONED GPUS</span>
-              <h2 className="display-6 fw-bold mt-1 text-dark">H100 / L40S</h2>
+              <span className="text-secondary text-sm text-uppercase font-monospace">PROVISIONED GPUS</span>
+              <h2 className="display-5 fw-bold mt-1 text-dark" style={{ minHeight: "52px", lineHeight: "1.1" }}>H100 / L40S</h2>
               <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
                 <div className="progress-bar" role="progressbar" style={{ width: "60%", backgroundColor: "#e5b800" }}></div>
               </div>
-              <small className="text-muted mt-2 d-block">Dedicated hardware bindings active</small>
+              <div className="text-muted mt-2 d-block text-sm">Dedicated hardware bindings active</div>
             </div>
           </div>
 
           <div className="col-md-3">
             <div className="card glass-card p-3 h-100" style={{ borderLeft: "4px solid #527edb" }}>
-              <span className="text-secondary text-xs text-uppercase font-monospace">ACTIVE VOLUMES</span>
-              <h2 className="display-6 fw-bold mt-1 text-info">2</h2>
+              <span className="text-secondary text-sm text-uppercase font-monospace">ACTIVE VOLUMES</span>
+              <h2 className="display-4 fw-bold mt-1 text-info">2</h2>
               <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
                 <div className="progress-bar bg-info" role="progressbar" style={{ width: "100%" }}></div>
               </div>
-              <small className="text-muted mt-2 d-block">High performance caching stores</small>
+              <div className="text-muted mt-2 d-block text-sm">High performance caching stores</div>
             </div>
           </div>
         </div>
