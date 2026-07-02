@@ -34,29 +34,54 @@ export default function Dashboard() {
   const [terminalSearch, setTerminalSearch] = useState("");
   const [apiKey, setApiKey] = useState("");
   
+  // Real-time live control plane stats
+  const [containers, setContainers] = useState<any[]>([]);
+  const [volumes, setVolumes] = useState<any[]>([]);
+  const [secrets, setSecrets] = useState<any[]>([]);
+  const [profile, setProfile] = useState<any>(null);
+  
   const terminalBodyRef = useRef<HTMLDivElement>(null);
 
-  // Fetch apps on mount
+  // Fetch apps on mount & poll every 15 seconds for real-time telemetry updates
   useEffect(() => {
     fetchApps();
+    const interval = setInterval(() => {
+      fetchApps();
+    }, 15000);
+    return () => clearInterval(interval);
   }, []);
+
   // Scroll terminal container to bottom when logs change (without scrolling the browser page)
   useEffect(() => {
     if (terminalBodyRef.current) {
       terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight;
     }
   }, [logs]);
+
   const fetchApps = async () => {
-    setLoadingApps(true);
     try {
       const res = await fetch("/api/apps");
       const data = await res.json();
-      setApps(data);
-      // Auto-select the first app
-      if (data && data.length > 0) {
-        const defaultApp = data.find((a: EnrichedApp) => a.name === "gemma-4-12B-OBLITERATED") || data[0];
-        setSelectedApp(defaultApp);
-        fetchLogs(defaultApp.name);
+      
+      if (data && typeof data === "object" && !Array.isArray(data)) {
+        setApps(data.apps || []);
+        setContainers(data.containers || []);
+        setVolumes(data.volumes || []);
+        setSecrets(data.secrets || []);
+        setProfile(data.profile || null);
+        
+        const appList = data.apps || [];
+        if (appList.length > 0) {
+          setSelectedApp((prev) => {
+            if (prev) {
+              const matched = appList.find((a: EnrichedApp) => a.appId === prev.appId);
+              return matched || prev;
+            }
+            const defaultApp = appList.find((a: EnrichedApp) => a.name === "gemma-4-12B-OBLITERATED") || appList[0];
+            fetchLogs(defaultApp.name);
+            return defaultApp;
+          });
+        }
       }
     } catch (err) {
       console.error("Error fetching apps:", err);
@@ -199,6 +224,11 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
           <h1 className="h3 text-dark font-monospace fw-bold mb-0">
             MODAL <span className="orange-highlight">SERVERLESS DASHBOARD</span>
           </h1>
+          {profile && (
+            <div className="text-end font-monospace text-xs text-secondary">
+              WORKSPACE: <span className="text-dark fw-bold">{profile.workspace}</span> | ACTIVE PROFILE: <span className="text-dark fw-bold">{profile.name}</span>
+            </div>
+          )}
         </div>
         
         {/* Telemetry Highlight Cards */}
@@ -207,7 +237,7 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
             <div className="card glass-card orange-border-left h-100">
               <div className="card-body p-3">
                 <span className="text-secondary text-sm text-uppercase font-monospace">ACTIVE DEPLOYMENTS</span>
-                <h2 className="display-4 fw-bold mt-1 text-dark" style={{ minHeight: "56px" }}>{apps.length || 5}</h2>
+                <h2 className="display-4 fw-bold mt-1 text-dark" style={{ minHeight: "56px" }}>{apps.length}</h2>
                 <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
                   <div className="progress-bar bg-primary" role="progressbar" style={{ width: "100%", backgroundColor: "#f16e00" }}></div>
                 </div>
@@ -221,10 +251,14 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
               <div className="card-body p-3">
                 <span className="text-secondary text-sm text-uppercase font-monospace">RUNNING CONTAINERS</span>
                 <h2 className="display-4 fw-bold mt-1 text-success" style={{ minHeight: "56px" }}>
-                  {apps.reduce((acc, app) => acc + app.tasksCount, 0)}
+                  {containers.length}
                 </h2>
                 <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
-                  <div className="progress-bar bg-success" role="progressbar" style={{ width: "0%" }}></div>
+                  <div 
+                    className="progress-bar bg-success" 
+                    role="progressbar" 
+                    style={{ width: containers.length > 0 ? "100%" : "0%" }}
+                  ></div>
                 </div>
                 <div className="text-muted mt-2 d-block text-sm">Auto-scaled to zero when idle</div>
               </div>
@@ -237,7 +271,7 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
                 <span className="text-secondary text-sm text-uppercase font-monospace">PROVISIONED GPUS</span>
                 <h2 className="display-5 fw-bold mt-1 text-dark" style={{ minHeight: "56px", lineHeight: "1.1" }}>H100 / L40S</h2>
                 <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
-                  <div className="progress-bar" role="progressbar" style={{ width: "60%", backgroundColor: "#e5b800" }}></div>
+                  <div className="progress-bar" role="progressbar" style={{ width: "100%", backgroundColor: "#e5b800" }}></div>
                 </div>
                 <div className="text-muted mt-2 d-block text-sm">Dedicated hardware bindings active</div>
               </div>
@@ -248,7 +282,7 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
             <div className="card glass-card h-100" style={{ borderLeft: "4px solid #527edb" }}>
               <div className="card-body p-3">
                 <span className="text-secondary text-sm text-uppercase font-monospace">ACTIVE VOLUMES</span>
-                <h2 className="display-4 fw-bold mt-1 text-info" style={{ minHeight: "56px" }}>2</h2>
+                <h2 className="display-4 fw-bold mt-1 text-info" style={{ minHeight: "56px" }}>{volumes.length}</h2>
                 <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
                   <div className="progress-bar bg-info" role="progressbar" style={{ width: "100%" }}></div>
                 </div>
@@ -546,78 +580,164 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
            </div>
          )}
  
-         {/* Infrastructure Metrics Tab */}
-         {activeTab === "metrics" && (
-           <div className="row g-4">
-             <div className="col-md-6">
-               <div className="card glass-card">
-                 <div className="card-body p-4">
-                   <h4 className="h5 text-dark font-monospace orange-highlight mb-3">GPU Compute Inventory</h4>
-                   <div className="table-responsive">
-                     <table className="table table-sm table-hover border-secondary font-monospace text-sm">
-                       <thead>
-                         <tr className="text-secondary border-bottom border-secondary">
-                           <th>GPU Type</th>
-                           <th>VRAM</th>
-                           <th>Active Nodes</th>
-                           <th>Target Models</th>
-                         </tr>
-                       </thead>
-                       <tbody>
-                         <tr className="border-bottom border-light">
-                           <td className="text-dark">NVIDIA H100</td>
-                           <td className="text-dark">80GB HBM3</td>
-                           <td className="text-dark">0 / 1</td>
-                           <td className="text-dark">`ideogram-4-fp8`</td>
-                         </tr>
-                         <tr className="border-bottom border-light">
-                           <td className="text-dark">NVIDIA L40S</td>
-                           <td className="text-dark">48GB GDDR6</td>
-                           <td className="text-dark">0 / 1</td>
-                           <td className="text-dark">`gemma-4-12B-OBLITERATED`</td>
-                         </tr>
-                         <tr className="border-bottom border-light">
-                           <td className="text-dark">NVIDIA A100</td>
-                           <td className="text-dark">40GB HBM2</td>
-                           <td className="text-dark">0 / 1</td>
-                           <td className="text-dark">`qwen36-27b-llama`</td>
-                         </tr>
-                         <tr className="border-bottom border-light">
-                           <td className="text-dark">Shared CPU</td>
-                           <td className="text-dark">Dynamic</td>
-                           <td className="text-dark">0 / 2</td>
-                           <td className="text-dark">`vox-populi`, `phc-companion`</td>
-                         </tr>
-                       </tbody>
-                     </table>
-                   </div>
-                 </div>
-               </div>
-             </div>
- 
-             <div className="col-md-6">
-               <div className="card glass-card">
-                 <div className="card-body p-4">
-                   <h4 className="h5 text-dark font-monospace orange-highlight mb-3">Serverless Auto-scaling Settings</h4>
-                   <p className="text-secondary text-sm">
-                     Each model handles cold starts dynamically. The current configurations extracted from your codebase settings:
-                   </p>
-                   <ul className="list-group font-monospace text-sm">
-                     <li className="list-group-item bg-transparent text-dark border-secondary">
-                       <strong className="orange-highlight-text">gemma-4-12B:</strong> Min containers = 0, Max = 1, Idle Scale-down = 10 minutes
-                     </li>
-                     <li className="list-group-item bg-transparent text-dark border-secondary">
-                       <strong className="orange-highlight-text">ideogram-4-fp8:</strong> Min containers = 0, Max = 1, Idle Scale-down = 5 minutes
-                     </li>
-                     <li className="list-group-item bg-transparent text-dark border-secondary">
-                       <strong className="orange-highlight-text">vLLM Inference:</strong> Auto-scales to 0 inside 2 minutes of idle time.
-                     </li>
-                   </ul>
-                 </div>
-               </div>
-             </div>
-           </div>
-         )}
+          {/* Infrastructure Metrics Tab */}
+          {activeTab === "metrics" && (
+            <div className="row g-4">
+              {/* Left Column: Running Containers & GPU allocations */}
+              <div className="col-md-6">
+                <div className="card glass-card mb-4">
+                  <div className="card-body p-4">
+                    <h4 className="h5 text-dark font-monospace orange-highlight mb-3">Active Workspace Containers ({containers.length})</h4>
+                    {containers.length === 0 ? (
+                      <div className="text-secondary text-sm font-monospace py-4 text-center">
+                        No active container instances running on GPU/CPU compute nodes.
+                      </div>
+                    ) : (
+                      <div className="table-responsive">
+                        <table className="table table-sm table-hover border-secondary font-monospace text-sm mb-0">
+                          <thead>
+                            <tr className="text-secondary border-bottom border-secondary">
+                              <th>Container ID</th>
+                              <th>App Name</th>
+                              <th>Start Time</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {containers.map((c, i) => (
+                              <tr key={i} className="border-bottom border-light">
+                                <td className="text-dark font-monospace text-xs">{c["Container ID"]}</td>
+                                <td className="text-dark fw-bold">{c["App Name"] || c["App ID"]}</td>
+                                <td className="text-dark text-xs">{c["Start Time"]}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="card glass-card">
+                  <div className="card-body p-4">
+                    <h4 className="h5 text-dark font-monospace orange-highlight mb-3">GPU Compute Node Map</h4>
+                    <div className="table-responsive">
+                      <table className="table table-sm table-hover border-secondary font-monospace text-sm mb-0">
+                        <thead>
+                          <tr className="text-secondary border-bottom border-secondary">
+                            <th>Compute Hardware</th>
+                            <th>Capacity Limit</th>
+                            <th>Active Tasks</th>
+                            <th>Target Applications</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className="border-bottom border-light">
+                            <td className="text-dark">NVIDIA H100 (80GB)</td>
+                            <td className="text-dark">1 GPU Max</td>
+                            <td className="text-dark font-monospace">
+                              {containers.some(c => c["App Name"] === "ideogram-4-fp8") ? (
+                                <span className="badge bg-success font-monospace">1 Active</span>
+                              ) : (
+                                "0 Active"
+                              )}
+                            </td>
+                            <td className="text-secondary">`ideogram-4-fp8`</td>
+                          </tr>
+                          <tr className="border-bottom border-light">
+                            <td className="text-dark">NVIDIA L40S (48GB)</td>
+                            <td className="text-dark">1 GPU Max</td>
+                            <td className="text-dark font-monospace">
+                              {containers.some(c => c["App Name"] === "gemma-4-12B-OBLITERATED") ? (
+                                <span className="badge bg-success font-monospace">1 Active</span>
+                              ) : (
+                                "0 Active"
+                              )}
+                            </td>
+                            <td className="text-secondary">`gemma-4-12B-OBLITERATED`</td>
+                          </tr>
+                          <tr className="border-bottom border-light">
+                            <td className="text-dark">NVIDIA A100 (40GB)</td>
+                            <td className="text-dark">1 GPU Max</td>
+                            <td className="text-dark font-monospace">
+                              {containers.some(c => c["App Name"] === "qwen36-27b-llama") ? (
+                                <span className="badge bg-success font-monospace">1 Active</span>
+                              ) : (
+                                "0 Active"
+                              )}
+                            </td>
+                            <td className="text-secondary">`qwen36-27b-llama`</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+  
+              {/* Right Column: Storage Volumes & Secrets */}
+              <div className="col-md-6">
+                <div className="card glass-card mb-4">
+                  <div className="card-body p-4">
+                    <h4 className="h5 text-dark font-monospace orange-highlight mb-3">Modal Volumes ({volumes.length})</h4>
+                    {volumes.length === 0 ? (
+                      <div className="text-secondary text-sm font-monospace py-4 text-center">
+                        No storage volumes configured.
+                      </div>
+                    ) : (
+                      <div className="table-responsive" style={{ maxHeight: "250px", overflowY: "auto" }}>
+                        <table className="table table-sm table-hover border-secondary font-monospace text-sm mb-0">
+                          <thead>
+                            <tr className="text-secondary border-bottom border-secondary">
+                              <th>Volume Name</th>
+                              <th>Created At</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {volumes.map((v, i) => (
+                              <tr key={i} className="border-bottom border-light">
+                                <td className="text-dark fw-bold">{v.Name}</td>
+                                <td className="text-secondary text-xs">{v["Created at"]}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="card glass-card">
+                  <div className="card-body p-4">
+                    <h4 className="h5 text-dark font-monospace orange-highlight mb-3">Workspace Secrets ({secrets.length})</h4>
+                    {secrets.length === 0 ? (
+                      <div className="text-secondary text-sm font-monospace py-4 text-center">
+                        No authentication secrets configured.
+                      </div>
+                    ) : (
+                      <div className="table-responsive" style={{ maxHeight: "250px", overflowY: "auto" }}>
+                        <table className="table table-sm table-hover border-secondary font-monospace text-sm mb-0">
+                          <thead>
+                            <tr className="text-secondary border-bottom border-secondary">
+                              <th>Secret Name</th>
+                              <th>Last Used At</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {secrets.map((s, i) => (
+                              <tr key={i} className="border-bottom border-light">
+                                <td className="text-dark font-monospace">{s.Name}</td>
+                                <td className="text-secondary text-xs">{s["Last used at"] || s["Created at"] || "Never"}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
       </main>
 
