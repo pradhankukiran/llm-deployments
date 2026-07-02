@@ -262,7 +262,7 @@ Response-Time: 95ms
         <div className="row g-3 mb-4">
           <div className="col-md-3">
             <div className="card glass-card orange-border-left p-3 h-100">
-              <span className="text-secondary text-xs uppercase font-monospace">ACTIVE DEPLOYMENTS</span>
+              <span className="text-secondary text-xs text-uppercase font-monospace">ACTIVE DEPLOYMENTS</span>
               <h2 className="display-6 fw-bold mt-1 text-white">{apps.length || 5}</h2>
               <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
                 <div className="progress-bar bg-primary" role="progressbar" style={{ width: "100%", backgroundColor: "#f16e00" }}></div>
@@ -273,7 +273,7 @@ Response-Time: 95ms
 
           <div className="col-md-3">
             <div className="card glass-card p-3 h-100" style={{ borderLeft: "4px solid #32c832" }}>
-              <span className="text-secondary text-xs uppercase font-monospace">RUNNING CONTAINERS</span>
+              <span className="text-secondary text-xs text-uppercase font-monospace">RUNNING CONTAINERS</span>
               <h2 className="display-6 fw-bold mt-1 text-success">
                 {apps.reduce((acc, app) => acc + app.tasksCount, 0)}
               </h2>
@@ -286,7 +286,7 @@ Response-Time: 95ms
 
           <div className="col-md-3">
             <div className="card glass-card p-3 h-100" style={{ borderLeft: "4px solid #ffd200" }}>
-              <span className="text-secondary text-xs uppercase font-monospace">PROVISIONED GPUS</span>
+              <span className="text-secondary text-xs text-uppercase font-monospace">PROVISIONED GPUS</span>
               <h2 className="display-6 fw-bold mt-1 text-warning">H100 / L40S</h2>
               <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
                 <div className="progress-bar bg-warning" role="progressbar" style={{ width: "60%" }}></div>
@@ -297,7 +297,7 @@ Response-Time: 95ms
 
           <div className="col-md-3">
             <div className="card glass-card p-3 h-100" style={{ borderLeft: "4px solid #527edb" }}>
-              <span className="text-secondary text-xs uppercase font-monospace">ACTIVE VOLUMES</span>
+              <span className="text-secondary text-xs text-uppercase font-monospace">ACTIVE VOLUMES</span>
               <h2 className="display-6 fw-bold mt-1 text-info">2</h2>
               <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
                 <div className="progress-bar bg-info" role="progressbar" style={{ width: "100%" }}></div>
@@ -354,7 +354,7 @@ Response-Time: 95ms
                   <p className="mt-2 text-secondary">Interrogating Modal control plane...</p>
                 </div>
               ) : (
-                <div className="d-flex flex-col gap-3">
+                <div className="d-flex flex-column gap-3">
                   {apps.map((app) => (
                     <div 
                       key={app.appId} 
@@ -371,7 +371,7 @@ Response-Time: 95ms
                             <span className={`status-dot ${app.tasksCount > 0 ? "status-dot-active" : "status-dot-idle"}`}></span>
                             <h4 className="h5 mb-0 text-white font-monospace fw-bold">{app.name}</h4>
                           </div>
-                          <span className="text-secondary font-monospace text-xs block mt-1">ID: {app.appId}</span>
+                          <span className="text-secondary font-monospace text-xs d-block mt-1">ID: {app.appId}</span>
                         </div>
                         <span className="badge bg-dark border border-secondary font-monospace text-secondary">
                           {app.state}
@@ -505,7 +505,7 @@ Response-Time: 95ms
               
               <div className="card glass-card p-4">
                 <div className="mb-3">
-                  <label className="form-label text-secondary text-xs font-monospace block">SELECT ENDPOINT</label>
+                  <label className="form-label text-secondary text-xs font-monospace d-block">SELECT ENDPOINT</label>
                   <select 
                     className="form-select bg-dark text-white border-secondary font-monospace"
                     value={selectedApp?.appId || ""}
