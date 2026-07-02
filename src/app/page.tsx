@@ -33,36 +33,19 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<"deployments" | "playground" | "metrics">("deployments");
   const [terminalSearch, setTerminalSearch] = useState("");
   const [apiKey, setApiKey] = useState("");
-  const [isMockMode, setIsMockMode] = useState(false);
   
   const terminalBodyRef = useRef<HTMLDivElement>(null);
-  const logIntervalRef = useRef<any>(null);
-  const typingIntervalRef = useRef<any>(null);
-
-  // Cleanup intervals on unmount
-  useEffect(() => {
-    return () => {
-      if (logIntervalRef.current) {
-        clearInterval(logIntervalRef.current);
-      }
-      if (typingIntervalRef.current) {
-        clearInterval(typingIntervalRef.current);
-      }
-    };
-  }, []);
 
   // Fetch apps on mount
   useEffect(() => {
     fetchApps();
   }, []);
-
   // Scroll terminal container to bottom when logs change (without scrolling the browser page)
   useEffect(() => {
     if (terminalBodyRef.current) {
       terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight;
     }
   }, [logs]);
-
   const fetchApps = async () => {
     setLoadingApps(true);
     try {
@@ -86,33 +69,12 @@ export default function Dashboard() {
     setLoadingLogs(true);
     setLogs([]);
 
-    // Clear any existing log streaming interval to prevent overlapping intervals
-    if (logIntervalRef.current) {
-      clearInterval(logIntervalRef.current);
-      logIntervalRef.current = null;
-    }
-
     try {
       const res = await fetch(`/api/logs?name=${encodeURIComponent(appName)}`);
       const data = await res.json();
       
       if (data && Array.isArray(data.logs)) {
-        // Simulate live streaming of the logs line by line
-        let currentLine = 0;
-        logIntervalRef.current = setInterval(() => {
-          if (currentLine < data.logs.length) {
-            const line = data.logs[currentLine];
-            if (typeof line === "string") {
-              setLogs((prev) => [...prev, line]);
-            }
-            currentLine++;
-          } else {
-            if (logIntervalRef.current) {
-              clearInterval(logIntervalRef.current);
-              logIntervalRef.current = null;
-            }
-          }
-        }, 100);
+        setLogs(data.logs);
       }
       
     } catch (err) {
@@ -128,117 +90,12 @@ export default function Dashboard() {
     fetchLogs(app.name);
   };
 
-  // Send actual request to Modal API via server-side Next.js route proxy (with mock fallback capability)
+  // Send actual request to Modal API via server-side Next.js route proxy
   const handleTestAPI = async () => {
     if (!selectedApp) return;
 
-    // Clear any existing typing interval
-    if (typingIntervalRef.current) {
-      clearInterval(typingIntervalRef.current);
-      typingIntervalRef.current = null;
-    }
-
     setIsQuerying(true);
     setResponseStream("");
-
-    if (isMockMode) {
-      const responses: Record<string, string> = {
-        "qwen36-27b-llama": `HTTP/1.1 200 OK
-Content-Type: application/json
-Time-to-first-token: 180ms
-Throughput: 62.1 tokens/sec
-Device: NVIDIA A100 Tensor Core (40GB)
-
-{
-  "choices": [
-    {
-      "message": {
-        "role": "assistant",
-        "content": "Qwen-36B (adapted to LLaMA format) initialized successfully on Modal vLLM worker. Prompt context evaluated: '${prompt}'. Ready for multilingual chat, code generation, and complex logical reasoning workloads."
-      },
-      "finish_reason": "stop"
-    }
-  ]
-}`,
-        "gemma-4-12B-OBLITERATED": `HTTP/1.1 200 OK
-Content-Type: application/json
-Time-to-first-token: 245ms
-Throughput: 85.4 tokens/sec
-
-{
-  "choices": [
-    {
-      "message": {
-        "role": "assistant",
-        "content": "Serverless functions (like AWS Lambda or Modal functions) are event-driven, ephemeral, and scale from 0 to thousands instantly. They only run when a request arrives, saving significant idling costs. In contrast, traditional container systems run continuously, sustaining idle resource costs, but bypass cold starts. Modal bridges this gap by enabling massive GPU autoscale-to-zero in seconds, optimizing both startup latency and cost efficiency."
-      },
-      "finish_reason": "stop"
-    }
-  ]
-}`,
-        "ideogram-4-fp8": `HTTP/1.1 200 OK
-Content-Type: application/json
-Generation-Time: 1.84s
-Device: NVIDIA H100 Tensor Core
-
-{
-  "status": "success",
-  "data": {
-    "image_url": "https://pradhankukiran--ideogram-4-fp8-api.modal.run/outputs/generated_f2849c.png",
-    "seed": 948294719,
-    "dimensions": "1024x1024",
-    "inference_steps": 28,
-    "metadata": {
-      "prompt": "${prompt}",
-      "sampling_type": "Euler",
-      "guidance_scale": 6.5
-    }
-  }
-}`,
-        "vox-populi": `HTTP/1.1 200 OK
-Content-Type: audio/mpeg
-Latency: 110ms
-Audio-Duration: 4.2s
-
-[Raw Byte Output: 184kB Audio Stream]
-Synthesized voice output generated successfully using 'en-US-Emma' voice model.`,
-        "phc-ai-health-companion": `HTTP/1.1 200 OK
-Content-Type: application/json
-Response-Time: 180ms
-
-{
-  "response": "Understood. Analyzing parameters for health companion agent. Standard clinical filters evaluated: 100% compliant. Safe guidelines matched. Suggesting standard advice for general wellness querying. Please consult a licensed professional for direct diagnostics.",
-  "tokens_processed": 98
-}`
-      };
-
-      const responseText = responses[selectedApp.name] || `HTTP/1.1 200 OK
-Content-Type: application/json
-Response-Time: 95ms
-
-{
-  "status": "active",
-  "result": "Standard endpoint execution completed. Status verified healthy for ${selectedApp.name}."
-}`;
-
-      setTimeout(() => {
-        let charIndex = 0;
-        typingIntervalRef.current = setInterval(() => {
-          if (charIndex < responseText.length) {
-            const chunk = responseText.substring(charIndex, charIndex + 4);
-            setResponseStream((prev) => prev + chunk);
-            charIndex += 4;
-          } else {
-            if (typingIntervalRef.current) {
-              clearInterval(typingIntervalRef.current);
-              typingIntervalRef.current = null;
-            }
-            setIsQuerying(false);
-          }
-        }, 15);
-      }, 200);
-      return;
-    }
 
     // Direct Live API Request
     try {
@@ -621,19 +478,6 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                   ></textarea>
-                </div>
-
-                <div className="mb-3 form-check font-monospace">
-                  <input 
-                    type="checkbox" 
-                    className="form-check-input" 
-                    id="mockModeCheck"
-                    checked={isMockMode}
-                    onChange={(e) => setIsMockMode(e.target.checked)}
-                  />
-                  <label className="form-check-label text-secondary text-sm cursor-pointer" htmlFor="mockModeCheck" style={{ userSelect: "none" }}>
-                    Simulate Locally (Mock Mode)
-                  </label>
                 </div>
 
                 <button 
