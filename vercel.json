@@ -1,0 +1,4 @@
+{
+  "installCommand": "npm install && pip install modal",
+  "framework": "nextjs"
+}
