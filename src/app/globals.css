@@ -212,3 +212,10 @@ body {
   color: #cc5200 !important; /* High contrast orange for readability on light backgrounds */
   font-weight: 600;
 }
+
+/* Selected Card Highlight Styles */
+.glass-card.selected-card {
+  border: 2px solid #f16e00 !important;
+  background-color: rgba(241, 110, 0, 0.05) !important;
+  box-shadow: 0 8px 20px rgba(241, 110, 0, 0.1) !important;
+}

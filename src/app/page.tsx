@@ -33,7 +33,7 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<"deployments" | "playground" | "metrics">("deployments");
   const [terminalSearch, setTerminalSearch] = useState("");
   
-  const terminalEndRef = useRef<HTMLDivElement>(null);
+  const terminalBodyRef = useRef<HTMLDivElement>(null);
   const logIntervalRef = useRef<any>(null);
 
   // Cleanup interval on unmount
@@ -50,10 +50,10 @@ export default function Dashboard() {
     fetchApps();
   }, []);
 
-  // Scroll terminal to bottom when logs change
+  // Scroll terminal container to bottom when logs change (without scrolling the browser page)
   useEffect(() => {
-    if (terminalEndRef.current) {
-      terminalEndRef.current.scrollIntoView({ behavior: "smooth" });
+    if (terminalBodyRef.current) {
+      terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight;
     }
   }, [logs]);
 
@@ -323,11 +323,7 @@ Response-Time: 95ms
                     <div 
                       key={app.appId} 
                       onClick={() => handleSelectApp(app)}
-                      className={`card glass-card p-3 cursor-pointer ${selectedApp?.appId === app.appId ? "border-primary" : ""}`}
-                      style={{ 
-                        cursor: "pointer", 
-                        borderColor: selectedApp?.appId === app.appId ? "#f16e00" : "rgba(255, 255, 255, 0.05)"
-                      }}
+                      className={`card glass-card p-3 cursor-pointer ${selectedApp?.appId === app.appId ? "selected-card" : ""}`}
                     >
                       <div className="d-flex justify-content-between align-items-start">
                         <div>
@@ -421,7 +417,7 @@ Response-Time: 95ms
                   </button>
                 </div>
                 
-                <div className="terminal-body" style={{ minHeight: "340px", maxHeight: "400px" }}>
+                <div ref={terminalBodyRef} className="terminal-body" style={{ minHeight: "340px", maxHeight: "400px" }}>
                   {filteredLogs.length === 0 ? (
                     <div className="text-secondary text-center py-5">
                       {loadingLogs ? "Connecting to logs socket..." : "No logs available. Select an app or clear filters."}
@@ -433,7 +429,6 @@ Response-Time: 95ms
                       </div>
                     ))
                   )}
-                  <div ref={terminalEndRef} />
                 </div>
               </div>
 
