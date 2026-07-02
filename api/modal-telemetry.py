@@ -35,9 +35,9 @@ async def _fetch_telemetry() -> dict:
         task_resp = await client.stub.TaskList(api_pb2.TaskListRequest())
         for t in task_resp.tasks:
             containers.append({
-                "Task ID": t.task_id,
+                "Container ID": t.task_id,
                 "App Name": t.app_description,
-                "Started at": time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(t.started_at)) if t.started_at else None,
+                "Start Time": time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(t.started_at)) if t.started_at else None,
             })
     except Exception:
         pass
@@ -46,7 +46,7 @@ async def _fetch_telemetry() -> dict:
     volumes = []
     try:
         vol_resp = await client.stub.VolumeList(api_pb2.VolumeListRequest())
-        for v in vol_resp.volumes:
+        for v in vol_resp.items:
             volumes.append({
                 "Name": v.label,
                 "Created at": time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(v.created_at)) if v.created_at else None,
