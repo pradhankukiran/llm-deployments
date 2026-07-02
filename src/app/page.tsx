@@ -123,13 +123,16 @@ export default function Dashboard() {
     // Direct Live API Request
     try {
       const appNameLower = selectedApp.name.toLowerCase();
-      let url = `https://pradhankukiran--${appNameLower}-api.modal.run/v1/chat/completions`;
+      
+      // Determine correct function deployment suffix (e.g. -serve or -api)
+      const suffix = selectedApp.name === "qwen36-27b-llama" ? "-serve" : "-api";
+      let url = `https://pradhankukiran--${appNameLower}${suffix}.modal.run/v1/chat/completions`;
       
       // Custom mapping paths for specific apps
       if (selectedApp.name === "vox-populi") {
-        url = `https://pradhankukiran--${appNameLower}-api.modal.run/synthesize`;
+        url = `https://pradhankukiran--${appNameLower}${suffix}.modal.run/synthesize`;
       } else if (selectedApp.name === "ideogram-4-fp8") {
-        url = `https://pradhankukiran--${appNameLower}-api.modal.run/v1/images/generations`;
+        url = `https://pradhankukiran--${appNameLower}${suffix}.modal.run/v1/images/generations`;
       }
 
       const headers: Record<string, string> = {};
@@ -517,6 +520,8 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
                         ? `https://pradhankukiran--vox-populi-api.modal.run/synthesize`
                         : selectedApp?.name === "ideogram-4-fp8"
                         ? `https://pradhankukiran--ideogram-4-fp8-api.modal.run/v1/images/generations`
+                        : selectedApp?.name === "qwen36-27b-llama"
+                        ? `https://pradhankukiran--qwen36-27b-llama-serve.modal.run/v1/chat/completions`
                         : `https://pradhankukiran--${selectedApp?.name.toLowerCase()}-api.modal.run/v1/chat/completions`}
                     </span>
                   </div>
