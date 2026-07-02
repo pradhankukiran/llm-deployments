@@ -230,7 +230,7 @@ Response-Time: 95ms
           <div className="col-md-3">
             <div className="card glass-card orange-border-left p-3 h-100">
               <span className="text-secondary text-sm text-uppercase font-monospace">ACTIVE DEPLOYMENTS</span>
-              <h2 className="display-4 fw-bold mt-1 text-dark">{apps.length || 5}</h2>
+              <h2 className="display-4 fw-bold mt-1 text-dark" style={{ minHeight: "56px" }}>{apps.length || 5}</h2>
               <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
                 <div className="progress-bar bg-primary" role="progressbar" style={{ width: "100%", backgroundColor: "#f16e00" }}></div>
               </div>
@@ -241,7 +241,7 @@ Response-Time: 95ms
           <div className="col-md-3">
             <div className="card glass-card p-3 h-100" style={{ borderLeft: "4px solid #32c832" }}>
               <span className="text-secondary text-sm text-uppercase font-monospace">RUNNING CONTAINERS</span>
-              <h2 className="display-4 fw-bold mt-1 text-success">
+              <h2 className="display-4 fw-bold mt-1 text-success" style={{ minHeight: "56px" }}>
                 {apps.reduce((acc, app) => acc + app.tasksCount, 0)}
               </h2>
               <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
@@ -254,7 +254,7 @@ Response-Time: 95ms
           <div className="col-md-3">
             <div className="card glass-card p-3 h-100" style={{ borderLeft: "4px solid #ffd200" }}>
               <span className="text-secondary text-sm text-uppercase font-monospace">PROVISIONED GPUS</span>
-              <h2 className="display-5 fw-bold mt-1 text-dark" style={{ minHeight: "52px", lineHeight: "1.1" }}>H100 / L40S</h2>
+              <h2 className="display-5 fw-bold mt-1 text-dark" style={{ minHeight: "56px", lineHeight: "1.1" }}>H100 / L40S</h2>
               <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
                 <div className="progress-bar" role="progressbar" style={{ width: "60%", backgroundColor: "#e5b800" }}></div>
               </div>
@@ -265,7 +265,7 @@ Response-Time: 95ms
           <div className="col-md-3">
             <div className="card glass-card p-3 h-100" style={{ borderLeft: "4px solid #527edb" }}>
               <span className="text-secondary text-sm text-uppercase font-monospace">ACTIVE VOLUMES</span>
-              <h2 className="display-4 fw-bold mt-1 text-info">2</h2>
+              <h2 className="display-4 fw-bold mt-1 text-info" style={{ minHeight: "56px" }}>2</h2>
               <div className="progress bg-dark progress-sm mt-2" style={{ height: "4px" }}>
                 <div className="progress-bar bg-info" role="progressbar" style={{ width: "100%" }}></div>
               </div>
