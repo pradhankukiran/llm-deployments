@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Orange Serverless Ops - Modal LLM Deployments",
+  title: "Modal LLM Deployments",
   description: "Telemetry, logs, and deployment manager for serverless LLM infrastructure on Modal.",
 };
 
