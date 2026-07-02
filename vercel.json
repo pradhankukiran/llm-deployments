@@ -1,4 +1,4 @@
 {
-  "installCommand": "npm install && pip install modal",
+  "installCommand": "npm install && uv pip install modal --system",
   "framework": "nextjs"
 }
