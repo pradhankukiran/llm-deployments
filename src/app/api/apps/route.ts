@@ -83,8 +83,26 @@ function scanLocalConfigs(): Record<string, LocalAppConfig> {
   return configs;
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    // On Vercel, use the Python serverless function that calls Modal SDK directly.
+    // Locally, fall back to the modal CLI.
+    const isVercel = !!process.env.VERCEL;
+
+    if (isVercel) {
+      const origin = new URL(request.url).origin;
+      try {
+        const res = await fetch(`${origin}/api/modal-telemetry`, { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          return NextResponse.json(data);
+        }
+      } catch (fetchErr: any) {
+        console.error("Failed to fetch from Python telemetry endpoint:", fetchErr.message);
+      }
+    }
+
+    // Local dev: use Modal CLI
     const execOpts = {
       encoding: "utf-8" as const,
       env: {
@@ -94,14 +112,12 @@ export async function GET() {
       }
     };
 
-    // 1. Fetch live apps from Modal CLI
     let liveApps: AppListItem[] = [];
     try {
       const output = execSync("modal app list --json", execOpts);
       liveApps = JSON.parse(output);
     } catch (cliError: any) {
       console.error("Failed to run modal app list:", cliError.message);
-      // Fallback apps in case CLI auth fails
       liveApps = [
         { "App ID": "ap-FqlATKzdYSuOL3LclGsY0x", "Description": "qwen36-27b-llama", "State": "deployed", "Tasks": "0", "Created at": "2026-05-12 04:06:44", "Stopped at": null },
         { "App ID": "ap-xsFJdbYMvvrBJuMO8BH4wn", "Description": "vox-populi", "State": "deployed", "Tasks": "0", "Created at": "2026-05-14 19:52:49", "Stopped at": null },
@@ -111,7 +127,6 @@ export async function GET() {
       ];
     }
 
-    // 2. Fetch live containers
     let liveContainers: any[] = [];
     try {
       const output = execSync("modal container list --json", execOpts);
@@ -120,7 +135,6 @@ export async function GET() {
       console.error("Failed to run modal container list:", cliError.message);
     }
 
-    // 3. Fetch live volumes
     let liveVolumes: any[] = [];
     try {
       const output = execSync("modal volume list --json", execOpts);
@@ -129,7 +143,6 @@ export async function GET() {
       console.error("Failed to run modal volume list:", cliError.message);
     }
 
-    // 4. Fetch live secrets
     let liveSecrets: any[] = [];
     try {
       const output = execSync("modal secret list --json", execOpts);
@@ -138,7 +151,6 @@ export async function GET() {
       console.error("Failed to run modal secret list:", cliError.message);
     }
 
-    // 5. Fetch live profile / workspace
     let activeProfile: any = null;
     try {
       const output = execSync("modal profile list --json", execOpts);
@@ -148,10 +160,8 @@ export async function GET() {
       console.error("Failed to run modal profile list:", cliError.message);
     }
 
-    // 6. Scan local projects for matching configurations
     const localConfigs = scanLocalConfigs();
 
-    // 7. Merge live info with local codebase config
     const enrichedApps: EnrichedApp[] = liveApps.map((app) => {
       const name = app.Description;
       const localConfig = localConfigs[name] || undefined;

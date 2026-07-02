@@ -12,6 +12,22 @@ export async function GET(request: Request) {
   }
 
   try {
+    // On Vercel, use the Python serverless function that streams logs using Modal SDK directly.
+    const isVercel = !!process.env.VERCEL;
+
+    if (isVercel) {
+      const origin = new URL(request.url).origin;
+      try {
+        const res = await fetch(`${origin}/api/modal-logs?name=${encodeURIComponent(name)}`, { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          return NextResponse.json(data);
+        }
+      } catch (fetchErr: any) {
+        console.error("Failed to fetch from Python logs endpoint:", fetchErr.message);
+      }
+    }
+
     const execOpts = {
       encoding: "utf-8" as const,
       env: {
