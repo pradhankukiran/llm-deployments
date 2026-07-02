@@ -159,19 +159,43 @@ body {
   color: #a855f7; /* Purple */
 }
 
-/* Glassmorphism utility card */
+/* Global reset for Orange Boosted's sharp, flat-square brand identity */
+.card, 
+.form-control, 
+.form-select, 
+.btn, 
+.badge, 
+.terminal-window, 
+.progress, 
+.progress-bar, 
+.list-group,
+.list-group-item, 
+input, 
+select, 
+textarea {
+  border-radius: 0 !important;
+}
+
+/* Enforce Orange Brand Focus Outlines on Form Controls */
+.form-control:focus, 
+.form-select:focus {
+  border-color: #f16e00 !important;
+  box-shadow: 0 0 0 1px #f16e00 !important;
+  outline: none !important;
+}
+
+/* Flat Boosted-style containers (replacing glassmorphism) */
 .glass-card {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  background: #ffffff !important;
+  border: 1px solid #cccccc !important;
+  box-shadow: none !important;
+  transition: border-color 0.2s ease-in-out;
 }
 
 .glass-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(241, 110, 0, 0.4);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  transform: none !important;
+  border-color: #f16e00 !important;
+  box-shadow: none !important;
 }
 
 /* Custom Orange Typography Details */
@@ -184,22 +208,23 @@ body {
   transition: transform 0.2s ease;
 }
 .hover-scale:hover {
-  transform: scale(1.02);
+  transform: scale(1.01);
 }
 
 /* Custom Tabs Styling for high contrast and brand consistency */
 .nav-tabs .nav-link.active {
   background-color: #ffffff !important;
   color: #000000 !important;
-  border-color: #cccccc #cccccc #ffffff !important;
-  border-top: 3px solid #f16e00 !important;
+  border-color: #000000 #000000 #ffffff !important;
+  border-top: 4px solid #f16e00 !important;
   font-weight: 700 !important;
 }
 
 .nav-tabs .nav-link {
-  color: #444444 !important;
+  color: #000000 !important;
   border: 1px solid transparent !important;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
+  font-weight: 500;
 }
 
 .nav-tabs .nav-link:hover {
@@ -213,9 +238,10 @@ body {
   font-weight: 600;
 }
 
-/* Selected Card Highlight Styles */
+/* Selected Card Highlight Styles (Thick border outline matching Orange brand guidelines) */
 .glass-card.selected-card {
-  border: 2px solid #f16e00 !important;
-  background-color: rgba(241, 110, 0, 0.05) !important;
-  box-shadow: 0 8px 20px rgba(241, 110, 0, 0.1) !important;
+  border: 2px solid #000000 !important;
+  outline: 2px solid #f16e00 !important;
+  background-color: #ffffff !important;
+  box-shadow: none !important;
 }
