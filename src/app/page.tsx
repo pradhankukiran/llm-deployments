@@ -140,6 +140,23 @@ export default function Dashboard() {
     setResponseStream("");
     
     const responses: Record<string, string> = {
+      "qwen36-27b-llama": `HTTP/1.1 200 OK
+Content-Type: application/json
+Time-to-first-token: 180ms
+Throughput: 62.1 tokens/sec
+Device: NVIDIA A100 Tensor Core (40GB)
+
+{
+  "choices": [
+    {
+      "message": {
+        "role": "assistant",
+        "content": "Qwen-36B (adapted to LLaMA format) initialized successfully on Modal vLLM worker. Prompt context evaluated: '${prompt}'. Ready for multilingual chat, code generation, and complex logical reasoning workloads."
+      },
+      "finish_reason": "stop"
+    }
+  ]
+}`,
       "gemma-4-12B-OBLITERATED": `HTTP/1.1 200 OK
 Content-Type: application/json
 Time-to-first-token: 245ms
