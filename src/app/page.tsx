@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 const GRAFANA_URL = "https://pradhankukiran--grafana-dashboard-start-grafana.modal.run";
-const LITELLM_GATEWAY_URL = "https://pradhankukiran--grafana-dashboard-start-litellm.modal.run";
+const LITELLM_GATEWAY_URL = "https://pradhankukiran--grafana-dashboard-start-litellm.modal.run/ui/";
 
 interface LocalAppConfig {
   appName: string;
