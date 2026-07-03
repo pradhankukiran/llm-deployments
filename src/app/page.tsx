@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
+
+const GRAFANA_URL = "https://pradhankukiran--grafana-dashboard-start-grafana.modal.run";
+const LITELLM_GATEWAY_URL = "https://pradhankukiran--grafana-dashboard-start-litellm.modal.run";
 
 interface LocalAppConfig {
   appName: string;
@@ -232,17 +234,25 @@ If your endpoint requires an API key, please enter it in the Authorization Key f
         
         {/* Page Title Block */}
         <div className="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary pb-3">
-          <div className="d-flex align-items-center gap-3">
+          <div className="d-flex align-items-center gap-3 flex-wrap">
             <h1 className="h3 text-dark font-monospace fw-bold mb-0">
               MODAL <span className="orange-highlight">SERVERLESS DASHBOARD</span>
             </h1>
             <a 
-              href="https://pradhankukiran--grafana-dashboard-start-grafana.modal.run" 
+              href={GRAFANA_URL}
               target="_blank" 
               rel="noopener noreferrer"
               className="btn btn-sm btn-outline-info font-monospace fw-bold px-2 py-1 text-xs"
             >
               LAUNCH GRAFANA ↗
+            </a>
+            <a
+              href={LITELLM_GATEWAY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-sm btn-outline-dark font-monospace fw-bold px-2 py-1 text-xs"
+            >
+              LAUNCH LITELLM ↗
             </a>
           </div>
           {profile && (
